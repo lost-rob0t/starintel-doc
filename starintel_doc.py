@@ -4,8 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import md5
 
-import requests
-
+__version__ = "0.1.1"
 
 @dataclass
 class BookerDocument:

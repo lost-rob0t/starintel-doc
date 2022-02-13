@@ -4,10 +4,10 @@ import starintel_doc
 
 setup(name="starintel_doc",
       version=starintel_doc.__version__,
-      description=couch3.__doc__[0],
+      description="Document Spec for Star intel",
       long_description=open("README.md", "r").read(),
       long_description_content_type="text/markdown",
-      url="https://github.com/pekrau/CouchDB2",
+      url="https://gitlab.com/unseen-giants/starintel_doc",
       author="Nsaspy",
       author_email="nsaspy@airmail.cc",
       license="MIT",
