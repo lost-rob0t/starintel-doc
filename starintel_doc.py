@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import md5
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 @dataclass
 class BookerDocument:
@@ -224,11 +224,11 @@ class BookerHost(BookerDocument):
     ip: str
     hostname: str
     operating_system: str
-    asn: int
-    country: str
-    network_name: str
-    owner: str
     date: str
+    asn: int = field(init=False, kw_only=True, default=0)
+    country: str = field(init=False, kw_only=True, default="")
+    network_name: str = field(init=False, kw_only=True, default="")
+    owner: str  = field(init=False, kw_only=True, default="")
     vulns: list[dict] = field(default_factory=list)
     services: list[dict] = field(default_factory=list)
     def make_doc(self, use_json=False):
@@ -273,3 +273,30 @@ class BookerCVE(BookerDocument):
             return doc
 
 
+@dataclass
+class BookerMesaage(BookerDocument):
+    platform: str # Domain of platform aka telegram.org. discord.gg
+    username: str = field(kw_only=True)
+    group_name: str = field(kw_only=True)
+    channel_name: str = field(kw_only=True) #only used incase like discord
+    message: str = field(kw_only=True)
+    message_type: str = field(kw_only=True)
+    is_reply: bool = field(kw_only=True)
+    date: str = field(kw_only=True)
+
+    def make_doc(self, use_json=False):
+        metadata = {'platform': self.platform, 'date': self.date, 
+                    'is_reply': self.is_reply, 'username': self.username, 
+                    'message': self.message, 'message_type': self.message_type}
+        if self.is_public:
+            doc = {'type': "cve", 
+                    'source_dataset': self.source_dataset, 
+                    'metadata': metadata}
+        else:
+            doc = {'type': "cve", 
+                    'source_dataset': self.source_dataset, 
+                    'private_metadata': metadata}
+        if use_json:
+            return json.dumps(doc)
+        else:
+            return doc
