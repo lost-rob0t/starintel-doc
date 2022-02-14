@@ -11,7 +11,6 @@ setup(name="starintel_doc",
       author="Nsaspy",
       author_email="nsaspy@airmail.cc",
       license="MIT",
-      python_requires=">= 3.6",
       py_modules=["starintel_doc"],
       
       classifiers=[
@@ -21,5 +20,5 @@ setup(name="starintel_doc",
           "Programming Language :: Python :: 3 :: Only",
           "Programming Language :: Python :: 3.10",
           "Operating System :: OS Independent",
-          ],
+          ]
 )
