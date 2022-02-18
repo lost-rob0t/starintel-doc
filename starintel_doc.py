@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import md5
 
-__version__ = "0.1.2"
+__version__ = "0.1.4"
 
 @dataclass
 class BookerDocument:
@@ -13,8 +13,8 @@ class BookerDocument:
         the meta data will be labled private and will
         not be gloably searched."""
     is_public: bool
-    _id: str = field(kw_only=True, default="") 
-    _rev: str = field(kw_only=True, default="") 
+    _id: str = field(kw_only=True, default=None) 
+    _rev: str = field(kw_only=True, default=None) 
     owner_id: int = field(kw_only=True, default=0)
     document_id: str = field(kw_only=True, default="")
     object_type: str = field(kw_only=True, default="")
@@ -103,14 +103,14 @@ class BookerPerson(BookerDocument):
 class BookerOganizations(BookerDocument):
     name: str
     country: str = field(default="")
-    organization_type: str = field(init=False) 
+    organization_type: str = field(kw_only=True, default="NGO") 
     members:  list[dict] = field(default_factory=list)    
     address:  list[dict] = field(default_factory=list)    
     email_formats:  list[str] = field(default_factory=list)
     def make_doc(self, use_json=False):
         metadata = {'name': self.name, 'country': self.country, 
                     'members': self.members, "address": self.address,
-                    'org_type': self.organization_type, 'email_formats': sel.email_formats}
+                    'org_type': self.organization_type, 'email_formats': self.email_formats}
         if self.is_public:
             doc = {'type': "org", 
                     'source_dataset': self.source_dataset, 
