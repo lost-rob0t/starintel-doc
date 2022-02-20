@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 
 @dataclass
 class BookerDocument:
@@ -23,7 +23,7 @@ class BookerDocument:
     date_added: str = field(default="Star Intel", kw_only=True)
 
     def make_id(self, json: str) -> str:
-        return sha256(bytes(json)).hexdigest()
+        return sha256(bytes(json, encoding="unicode")).hexdigest()
 @dataclass
 class BookerPerson(BookerDocument):
     fname: str =field(kw_only=True)
