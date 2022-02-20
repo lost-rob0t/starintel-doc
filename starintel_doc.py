@@ -23,7 +23,7 @@ class BookerDocument:
     date_added: str = field(default="Star Intel", kw_only=True)
 
     def make_id(self, json: str) -> str:
-        return sha256(bytes(json, encoding="unicode")).hexdigest()
+        return sha256(bytes(json, encoding="utf-8")).hexdigest()
 @dataclass
 class BookerPerson(BookerDocument):
     fname: str =field(kw_only=True)
