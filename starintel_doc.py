@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import md5
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"
 
 @dataclass
 class BookerDocument:
@@ -20,8 +20,7 @@ class BookerDocument:
     object_type: str = field(kw_only=True, default="")
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str  = field(default="Star Intel", kw_only=True)
-    metadata: dict = field(default_factory=dict, kw_only=True)
-
+    date_added: str = field(default="Star Intel", kw_only=True) 
     def bump_version(self, doc):
         hash = md5(bytes(doc, encoding='utf-8')).hexdigest()
         number = self._rev.split("-")[0]
@@ -60,6 +59,7 @@ class BookerPerson(BookerDocument):
     fname: str
     lname: str
     mname: str = field(default="", kw_only=True)
+    bio: str  = field(default="", kw_only=True)
     age: int = field(default=0, kw_only=True)
     dob: str  = field(default="", kw_only=True)
     phones: list[dict] = field(default_factory=list, kw_only=True)
@@ -72,21 +72,22 @@ class BookerPerson(BookerDocument):
     comments:  list[dict] = field(default_factory=list, kw_only=True)
     def make_doc(self, use_json=False):
     
-        metadata = {'fname': self.fname, 'mname': self.mname, 
+        doc = {'fname': self.fname, 'mname': self.mname, 
                         'lname': self.lname, 'age': self.age, 
                         'dob': self.dob, 'emails': self.emails, 
                         'phones': self.phones, 'employments': self.employment_history, 
-                        'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments}
+                        'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
+                        'bio': self.bio}
 
     
         if self.is_public:
-            doc = {'type': "person", 
+            doc = {'type': "person", 'date': self.date_added, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
-
                     
         else:
-            doc = {'type': "person", 
+            doc = {'type': "person", 'date': self.date_added, 
+
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if self._id:
@@ -103,6 +104,7 @@ class BookerPerson(BookerDocument):
 class BookerOganizations(BookerDocument):
     name: str
     country: str = field(default="")
+    bio: str = field(default="")
     organization_type: str = field(kw_only=True, default="NGO") 
     members:  list[dict] = field(default_factory=list)    
     address:  list[dict] = field(default_factory=list)    
@@ -112,11 +114,11 @@ class BookerOganizations(BookerDocument):
                     'members': self.members, "address": self.address,
                     'org_type': self.organization_type, 'email_formats': self.email_formats}
         if self.is_public:
-            doc = {'type': "org", 
+            doc = {'type': "org", 'date': self.date_added, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "org", 
+            doc = {'type': "org", 'date': self.date_added, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -138,11 +140,11 @@ class BookerMember:
                     'role': self.role, 'email': self.email,
                     'start_date': self.start_date, 'end_date': self.end_date}
         if self.is_public:
-            doc = {'type': "member", 
+            doc = {'type': "member", 'date': self.date_added, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "member", 
+            doc = {'type': "member", 'date': self.date_added,  
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -161,11 +163,11 @@ class BookerEmail(BookerDocument):
         metadata = {'owner': self.owner, 'username': self.email_username, 
                     'domain': self.email_domain, 'seen': self.date_seen}
         if self.is_public:
-            doc = {'type': "email", 
+            doc = {'type': "email", 'date': self.date_added,  
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "email", 
+            doc = {'type': "email", 'date': self.date_added,  
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
