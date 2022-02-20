@@ -2,9 +2,9 @@ import json
 import random
 import uuid
 from dataclasses import dataclass, field
-from hashlib import md5
-
-__version__ = "0.1.5"
+from hashlib import sha256
+from datetime import datetime
+__version__ = "0.1.6"
 
 @dataclass
 class BookerDocument:
@@ -20,48 +20,19 @@ class BookerDocument:
     object_type: str = field(kw_only=True, default="")
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str  = field(default="Star Intel", kw_only=True)
-    date_added: str = field(default="Star Intel", kw_only=True) 
-    def bump_version(self, doc):
-        hash = md5(bytes(doc, encoding='utf-8')).hexdigest()
-        number = self._rev.split("-")[0]
-        number = int(number) 
-        number += 1
-        self._rev = str(number) + "-" + hash
-        print(self._rev)
-    def build(self):
-        """
-        The asdict function is used to convert the dataset object into a dictionary.
-        
-        :param self: Used to refer to the object itself.
-        :return: a dictionary containing the type, source dataset and metadata of a datum.
-        :doc-author: Trelent
-        """
-        if self.is_public:
-            return {'type': self.object_type, 
-                    'source_dataset': self.source_dataset, 
-                    'metadata': metadata}
-        else:
-            return {'type': self.object_type, 
-                    'source_dataset': self.source_dataset, 
-                    'private_metadata': metadata}
-    def to_json(self):
-        doc = {'owner_id': self.owner_id, 'document_id': self.document_id, 
-                'dataset': self.dataset, 'source': self.source_dataset}
-        if self.is_public:
-            doc["metadata"]: self.metadata
-        else:
-            doc["private_metadata"]
-        
-        return json.dumps(doc)
+    date_added: str = field(default="Star Intel", kw_only=True)
 
+    def make_id(self, json: str) -> str:
+        return sha256(bytes(json)).hexdigest()
 @dataclass
 class BookerPerson(BookerDocument):
-    fname: str
-    lname: str
+    fname: str =field(kw_only=True)
+    lname: str = field(kw_only=True)
     mname: str = field(default="", kw_only=True)
     bio: str  = field(default="", kw_only=True)
     age: int = field(default=0, kw_only=True)
     dob: str  = field(default="", kw_only=True)
+    social_media: list = field(default_factory=list, kw_only=True)
     phones: list[dict] = field(default_factory=list, kw_only=True)
     address: list[dict] = field(default_factory=list, kw_only=True)
     ip: list[dict] = field(default_factory=list, kw_only=True)
@@ -72,12 +43,12 @@ class BookerPerson(BookerDocument):
     comments:  list[dict] = field(default_factory=list, kw_only=True)
     def make_doc(self, use_json=False):
     
-        doc = {'fname': self.fname, 'mname': self.mname, 
+        metadata = {'fname': self.fname, 'mname': self.mname, 
                         'lname': self.lname, 'age': self.age, 
                         'dob': self.dob, 'emails': self.emails, 
                         'phones': self.phones, 'employments': self.employment_history, 
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
-                        'bio': self.bio}
+                        'bio': self.bio, 'locations': self.address}
 
     
         if self.is_public:
@@ -128,17 +99,19 @@ class BookerOganizations(BookerDocument):
 
 
 @dataclass
-class BookerMember:
-    person_id: str 
-    organization_id = str
-    email: str = field(init=False)
-    role: str = field(init=False)
-    start_date: str = field(init=False)
-    end_date: str = field(init=False)
+class BookerMember(BookerPerson):
+    title: str
+    organization: str
+    roles: list[str] = field(default_factory=list, kw_only=True)
+    start_date: str = field(kw_only=True, default=datetime.now().isoformat())
+    end_date: str = field(kw_only=True, default="")
+
     def make_doc(self, use_json=False):
-        metadata = {'person': self.person_id, 'org_id': self.organization_id, 
-                    'role': self.role, 'email': self.email,
-                    'start_date': self.start_date, 'end_date': self.end_date}
+        self.organizations.append(self.organization)
+        metadata = {
+                    'roles': self.roles, 
+                    'start_date': self.start_date, 
+                    'end_date': self.end_date}
         if self.is_public:
             doc = {'type': "member", 'date': self.date_added, 
                     'source_dataset': self.source_dataset, 
@@ -154,10 +127,10 @@ class BookerMember:
 
 @dataclass
 class BookerEmail(BookerDocument):
-    owner: str
-    email_username: str
-    email_domain: str
-    date_seen: str
+    owner: str =  field(kw_only=True)
+    email_username: str =  field(kw_only=True, default="")
+    email_domain: str = field(kw_only=True, default="")
+    date_seen: str  = field(kw_only=True, default="")
     data_breach: list[dict] = field(default_factory=list, kw_only=True)
     def make_doc(self, use_json=False):
         metadata = {'owner': self.owner, 'username': self.email_username, 
