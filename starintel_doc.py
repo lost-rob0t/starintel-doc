@@ -14,16 +14,27 @@ class BookerDocument:
         not be gloably searched."""
     is_public: bool
     _id: str = field(kw_only=True, default=None) 
-    _rev: str = field(kw_only=True, default=None) 
+    _rev: str = field(kw_only=True, default=None)
+    _attachments: dict = field(default_factory=dict, kw_only=True)
     owner_id: int = field(kw_only=True, default=0)
     document_id: str = field(kw_only=True, default="")
     object_type: str = field(kw_only=True, default="")
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str  = field(default="Star Intel", kw_only=True)
     date_added: str = field(default="Star Intel", kw_only=True)
+    doc: dict = field(default_factory=dict, kw_only=True)
+    def parse_doc(self, doc):
+        self.doc = json.loads(doc)
+        if self.doc.get("_id", None) is not None:
+            self._id = self.doc["_id"]
+        if self.doc.get("_rev", None) is not None:
+            self._rev = self.doc["_rev"]
+        if self.doc.get("_attachments", None) is not None:
+            self._attachments = self.doc["_attachments"]
 
     def make_id(self, json: str) -> str:
         return sha256(bytes(json, encoding="utf-8")).hexdigest()
+        
 @dataclass
 class BookerPerson(BookerDocument):
     fname: str =field(kw_only=True)
@@ -53,11 +64,13 @@ class BookerPerson(BookerDocument):
     
         if self.is_public:
             doc = {'type': "person", 'date': self.date_added, 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
                     
         else:
             doc = {'type': "person", 'date': self.date_added, 
+                    'dataset': self.dataset, 
 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -86,10 +99,12 @@ class BookerOganizations(BookerDocument):
                     'org_type': self.organization_type, 'email_formats': self.email_formats}
         if self.is_public:
             doc = {'type': "org", 'date': self.date_added, 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "org", 'date': self.date_added, 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -107,17 +122,23 @@ class BookerMember(BookerPerson):
     end_date: str = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
-        self.organizations.append(self.organization)
         metadata = {
-                    'roles': self.roles, 
+                    'roles': self.roles, 'title': self.title,
                     'start_date': self.start_date, 
-                    'end_date': self.end_date}
+                    'end_date': self.end_date, 'fname': self.fname, 'mname': self.mname, 
+                        'lname': self.lname, 'age': self.age, 
+                        'dob': self.dob, 'emails': self.emails, 
+                        'phones': self.phones, 'employments': self.employment_history, 
+                        'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
+                        'bio': self.bio, 'locations': self.address}
         if self.is_public:
-            doc = {'type': "member", 'date': self.date_added, 
+            doc = {'type': "person", 'date': self.date_added, 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "member", 'date': self.date_added,  
+            doc = {'type': "person", 'date': self.date_added,  
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -137,10 +158,12 @@ class BookerEmail(BookerDocument):
                     'domain': self.email_domain, 'seen': self.date_seen}
         if self.is_public:
             doc = {'type': "email", 'date': self.date_added,  
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "email", 'date': self.date_added,  
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -158,10 +181,12 @@ class BookerBreach(BookerDocument):
                     'description': self.description, 'url': self.url}
         if self.is_public:
             doc = {'type': "breach", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "breach", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -184,10 +209,12 @@ class BookerWebService(BookerDocument):
         if self.is_public:
             doc = {'type': "web_service", 
                     'source_dataset': self.source_dataset, 
+                    'dataset': self.dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "web_service", 
                     'source_dataset': self.source_dataset, 
+                    'dataset': self.dataset, 
                     'private_metadata': metadata}
         if use_json:
             return json.dumps(doc)
@@ -200,10 +227,10 @@ class BookerHost(BookerDocument):
     hostname: str
     operating_system: str
     date: str
-    asn: int = field(init=False, kw_only=True, default=0)
-    country: str = field(init=False, kw_only=True, default="")
-    network_name: str = field(init=False, kw_only=True, default="")
-    owner: str  = field(init=False, kw_only=True, default="")
+    asn: int = field(kw_only=True, default=0)
+    country: str = field(kw_only=True, default="")
+    network_name: str = field(kw_only=True, default="")
+    owner: str  = field(kw_only=True, default="")
     vulns: list[dict] = field(default_factory=list)
     services: list[dict] = field(default_factory=list)
     def make_doc(self, use_json=False):
@@ -215,9 +242,11 @@ class BookerHost(BookerDocument):
         if self.is_public:
             doc = {'type': "host", 
                     'source_dataset': self.source_dataset, 
+                    'dataset': self.dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "host", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -236,10 +265,12 @@ class BookerCVE(BookerDocument):
                     'score': self.score, 'host': self.host_id}
         if self.is_public:
             doc = {'type': "cve", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "cve", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
@@ -265,13 +296,42 @@ class BookerMesaage(BookerDocument):
                     'message': self.message, 'message_type': self.message_type}
         if self.is_public:
             doc = {'type': "cve", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
             doc = {'type': "cve", 
+                    'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
         if use_json:
             return json.dumps(doc)
         else:
             return doc
+
+@dataclass
+class BookerAddress(BookerDocument):
+    street: str= field(kw_only=True)
+    city: str = field(kw_only=True)
+    state: str = field(kw_only=True)
+    apt: str = field(kw_only=True, default="")
+    zip: str = field(kw_only=True, default="")
+    members: list = field(kw_only=True, default_factory=list)
+    def make_doc(self, use_json=False):
+        metadata = {'steet': self.street, 'apt': self.apt, 
+                    'zip': self.zip, 'state': self.state, 
+                    'city': self.city, 'members': self.memebers}
+        if self.is_public:
+            doc = {'type': "address",
+                    'dataset': self.dataset, 
+                    'source_dataset': self.source_dataset, 
+                    'metadata': metadata}
+        else:
+            doc = {'type': "adress", 
+                    'dataset': self.dataset, 
+                    'source_dataset': self.source_dataset, 
+                    'private_metadata': metadata}
+        if use_json:
+            return json.dumps(doc)
+        else:
+            return doc 
