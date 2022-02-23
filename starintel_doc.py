@@ -4,8 +4,9 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.1.9"
-
+__version__ = "0.2.0"
+def make_id(json: str) -> str:
+    return sha256(bytes(json, encoding="utf-8")).hexdigest()
 @dataclass
 class BookerDocument:
     """Class for Documents to be stored in Booker
@@ -13,6 +14,7 @@ class BookerDocument:
         the meta data will be labled private and will
         not be gloably searched."""
     is_public: bool
+    operation_id = field(kw_only=True, init=True)
     _id: str = field(kw_only=True, default=None) 
     _rev: str = field(kw_only=True, default=None)
     _attachments: dict = field(default_factory=dict, kw_only=True)
@@ -21,7 +23,7 @@ class BookerDocument:
     object_type: str = field(kw_only=True, default="")
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str  = field(default="Star Intel", kw_only=True)
-    date_added: str = field(default="Star Intel", kw_only=True)
+    date_added: str = field(default=datetime.now().isoformat(), kw_only=True)
     doc: dict = field(default_factory=dict, kw_only=True)
     def parse_doc(self, doc):
         self.doc = json.loads(doc)
@@ -32,8 +34,6 @@ class BookerDocument:
         if self.doc.get("_attachments", None) is not None:
             self._attachments = self.doc["_attachments"]
 
-    def make_id(self, json: str) -> str:
-        return sha256(bytes(json, encoding="utf-8")).hexdigest()
         
 @dataclass
 class BookerPerson(BookerDocument):
@@ -63,13 +63,13 @@ class BookerPerson(BookerDocument):
 
     
         if self.is_public:
-            doc = {'type': "person", 'date': self.date_added, 
+            doc = {'operation_id': self.operation_id, 'type': "person", 'date': self.date_added, 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
                     
         else:
-            doc = {'type': "person", 'date': self.date_added, 
+            doc = {'operation_id': self.operation_id, 'type': "person", 'date': self.date_added, 
                     'dataset': self.dataset, 
 
                     'source_dataset': self.source_dataset, 
@@ -98,12 +98,12 @@ class BookerOganizations(BookerDocument):
                     'members': self.members, "address": self.address,
                     'org_type': self.organization_type, 'email_formats': self.email_formats}
         if self.is_public:
-            doc = {'type': "org", 'date': self.date_added, 
+            doc = {'operation_id': self.operation_id, 'type': "org", 'date': self.date_added, 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "org", 'date': self.date_added, 
+            doc = {'operation_id': self.operation_id,  'type': "org", 'date': self.date_added, 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -116,7 +116,6 @@ class BookerOganizations(BookerDocument):
 @dataclass
 class BookerMember(BookerPerson):
     title: str
-    organization: str
     roles: list[str] = field(default_factory=list, kw_only=True)
     start_date: str = field(kw_only=True, default=datetime.now().isoformat())
     end_date: str = field(kw_only=True, default="")
@@ -132,12 +131,12 @@ class BookerMember(BookerPerson):
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
                         'bio': self.bio, 'locations': self.address}
         if self.is_public:
-            doc = {'type': "person", 'date': self.date_added, 
+            doc = {'operation_id': self.operation_id, 'type': "person", 'date': self.date_added, 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "person", 'date': self.date_added,  
+            doc = {'operation_id': self.operation_id, 'type': "person", 'date': self.date_added,  
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -157,12 +156,12 @@ class BookerEmail(BookerDocument):
         metadata = {'owner': self.owner, 'username': self.email_username, 
                     'domain': self.email_domain, 'seen': self.date_seen}
         if self.is_public:
-            doc = {'type': "email", 'date': self.date_added,  
+            doc = {'operation_id': self.operation_id, 'type': "email", 'date': self.date_added,  
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "email", 'date': self.date_added,  
+            doc = {'operation_id': self.operation_id, 'type': "email", 'date': self.date_added,  
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -180,12 +179,12 @@ class BookerBreach(BookerDocument):
         metadata = {'date': self.date, 'total': self.total, 
                     'description': self.description, 'url': self.url}
         if self.is_public:
-            doc = {'type': "breach", 
+            doc = {'operation_id': self.operation_id, 'type': "breach", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "breach", 
+            doc = {'operation_id': self.operation_id, 'type': "breach", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -207,12 +206,12 @@ class BookerWebService(BookerDocument):
                     'service': self.service, 'source': self.source,
                     'date': self.date, 'version': self.end_date}
         if self.is_public:
-            doc = {'type': "web_service", 
+            doc = {'operation_id': self.operation_id, 'type': "web_service", 
                     'source_dataset': self.source_dataset, 
                     'dataset': self.dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "web_service", 
+            doc = {'operation_id': self.operation_id, 'type': "web_service", 
                     'source_dataset': self.source_dataset, 
                     'dataset': self.dataset, 
                     'private_metadata': metadata}
@@ -240,12 +239,12 @@ class BookerHost(BookerDocument):
                     'country': self.country, 'os': self.operating_system, 
                     'vulns': self.vulns, 'services': self.services}
         if self.is_public:
-            doc = {'type': "host", 
+            doc = {'operation_id': self.operation_id, 'type': "host", 
                     'source_dataset': self.source_dataset, 
                     'dataset': self.dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "host", 
+            doc = {'operation_id': self.operation_id, 'type': "host", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -282,25 +281,35 @@ class BookerCVE(BookerDocument):
 @dataclass
 class BookerMesaage(BookerDocument):
     platform: str # Domain of platform aka telegram.org. discord.gg
+    media: bool
     username: str = field(kw_only=True)
-    group_name: str = field(kw_only=True)
-    channel_name: str = field(kw_only=True) #only used incase like discord
+    fname: str = field(kw=True, default="")
+    lname: str = field(kw=True, default="")
+    phone: str = field(kw_only=True) # Used for singnal and telegram
+    user_id: str = field(kw_only=True, default="") # Hash the userid of the platform to keep it uniform 
+    # Should be a hash of groupname, message, date and username.
+    # Using this system we can track message replys across platforms amd keeps it easy
+    message_id: str = field(kw_only=True)  
+    group_name: str = field(kw_only=True) # Server name if discord
+    channel_name: str = field(kw_only=True) # only used incase like discord
     message: str = field(kw_only=True)
-    message_type: str = field(kw_only=True)
+    message_type: str = field(kw_only=True) # type of message
     is_reply: bool = field(kw_only=True)
-    date: str = field(kw_only=True)
+    reply_id = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
         metadata = {'platform': self.platform, 'date': self.date, 
                     'is_reply': self.is_reply, 'username': self.username, 
-                    'message': self.message, 'message_type': self.message_type}
+                    'message': self.message, 'message_type': self.message_type, 
+                    'user_id': self.user_id, "fname": self.fname, "lname": self.lname, 
+                    'message_id': self.message_id, 'date': self.date_added, 'is_media': self.media}
         if self.is_public:
-            doc = {'type': "cve", 
+            doc = {'operation_id': self.operation_id, 'type': "message", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "cve", 
+            doc = {'operation_id': self.operation_id, 'type': "message", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
@@ -320,14 +329,41 @@ class BookerAddress(BookerDocument):
     def make_doc(self, use_json=False):
         metadata = {'steet': self.street, 'apt': self.apt, 
                     'zip': self.zip, 'state': self.state, 
-                    'city': self.city, 'members': self.memebers}
+                    'city': self.city, 'members': self.members}
         if self.is_public:
-            doc = {'type': "address",
+            doc = {'operation_id': self.operation_id, 'type': "address",
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'metadata': metadata}
         else:
-            doc = {'type': "adress", 
+            doc = {'operation_id': self.operation_id, 'type': "adress", 
+                    'dataset': self.dataset, 
+                    'source_dataset': self.source_dataset, 
+                    'private_metadata': metadata}
+        if use_json:
+            return json.dumps(doc)
+        else:
+            return doc 
+
+@dataclass
+class BookerUsername(BookerDocument):
+    username: str
+    platform: str
+    owner: str = field(kw_only=True, default="")
+    email: str = field(kw_only=True, default="")
+    phone: str = field(kw_only=True, default="")
+    org: str = field(kw_only=True, default="")
+    def make_doc(self, use_json=False):
+        metadata = {'username': self.username, 'platform': self.platform, 
+                    'owner': self.owner, 'email': self.email, 
+                    'phone': self.phone, 'members': self.org}
+        if self.is_public:
+            doc = {'operation_id': self.operation_id, 'type': "address",
+                    'dataset': self.dataset, 
+                    'source_dataset': self.source_dataset, 
+                    'metadata': metadata}
+        else:
+            doc = {'operation_id': self.operation_id, 'type': "adress", 
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
