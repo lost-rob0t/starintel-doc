@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 @dataclass
 class BookerDocument:
