@@ -14,7 +14,7 @@ class BookerDocument:
         the meta data will be labled private and will
         not be gloably searched."""
     is_public: bool
-    operation_id = field(kw_only=True, init=True)
+    operation_id: int = field(kw_only=True, init=True)
     _id: str = field(kw_only=True, default=None) 
     _rev: str = field(kw_only=True, default=None)
     _attachments: dict = field(default_factory=dict, kw_only=True)
