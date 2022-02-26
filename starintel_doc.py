@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 def make_id(json: str) -> str:
     return sha256(bytes(json, encoding="utf-8")).hexdigest()
 @dataclass
@@ -140,6 +140,11 @@ class BookerMember(BookerPerson):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+        
         if use_json:
             return json.dumps(doc)
         else:
@@ -165,6 +170,11 @@ class BookerEmail(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -188,6 +198,11 @@ class BookerBreach(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -215,6 +230,12 @@ class BookerWebService(BookerDocument):
                     'source_dataset': self.source_dataset, 
                     'dataset': self.dataset, 
                     'private_metadata': metadata}
+
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -248,6 +269,12 @@ class BookerHost(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -272,6 +299,12 @@ class BookerCVE(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -283,8 +316,8 @@ class BookerMesaage(BookerDocument):
     platform: str # Domain of platform aka telegram.org. discord.gg
     media: bool
     username: str = field(kw_only=True)
-    fname: str = field(kw=True, default="")
-    lname: str = field(kw=True, default="")
+    fname: str = field(kw_only=True, default="")
+    lname: str = field(kw_only=True, default="")
     phone: str = field(kw_only=True) # Used for singnal and telegram
     user_id: str = field(kw_only=True, default="") # Hash the userid of the platform to keep it uniform 
     # Should be a hash of groupname, message, date and username.
@@ -295,7 +328,7 @@ class BookerMesaage(BookerDocument):
     message: str = field(kw_only=True)
     message_type: str = field(kw_only=True) # type of message
     is_reply: bool = field(kw_only=True)
-    reply_id = field(kw_only=True, default="")
+    reply_id: str = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
         metadata = {'platform': self.platform, 'date': self.date, 
@@ -313,6 +346,12 @@ class BookerMesaage(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -340,6 +379,12 @@ class BookerAddress(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
         if use_json:
             return json.dumps(doc)
         else:
@@ -367,6 +412,12 @@ class BookerUsername(BookerDocument):
                     'dataset': self.dataset, 
                     'source_dataset': self.source_dataset, 
                     'private_metadata': metadata}
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
+
         if use_json:
             return json.dumps(doc)
         else:
