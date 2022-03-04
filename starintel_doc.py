@@ -37,8 +37,8 @@ class BookerDocument:
         
 @dataclass
 class BookerPerson(BookerDocument):
-    fname: str =field(kw_only=True)
-    lname: str = field(kw_only=True)
+    fname: str = field(kw_only=True, default="")
+    lname: str = field(kw_only=True, default="")
     mname: str = field(default="", kw_only=True)
     bio: str  = field(default="", kw_only=True)
     age: int = field(default=0, kw_only=True)
@@ -52,14 +52,15 @@ class BookerPerson(BookerDocument):
     employment_history:  list[dict] = field(default_factory=list, kw_only=True)
     organizations:  list[dict] = field(default_factory=list, kw_only=True)
     comments:  list[dict] = field(default_factory=list, kw_only=True)
+    object_type = "person"
     def make_doc(self, use_json=False):
     
         metadata = {'fname': self.fname, 'mname': self.mname, 
                         'lname': self.lname, 'age': self.age, 
                         'dob': self.dob, 'emails': self.emails, 
-                        'phones': self.phones, 'employments': self.employment_history, 
+                        'phones': self.phones, 
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
-                        'bio': self.bio, 'locations': self.address}
+                        'bio': self.bio, 'locations': self.address, "social_media": self.social_media}
 
     
         if self.is_public:
@@ -82,20 +83,39 @@ class BookerPerson(BookerDocument):
             return json.dumps(doc)
         else:
             return doc
-
+    def load(self, doc):
+        if doc['type'] == "person":
+            self.type = doc.get('type')
+            meta = doc['metadata']
+            self.fname = meta['fname']
+            self.mname = meta['mname']
+            self.lname = meta['lname']
+            self.age = meta['age']
+            self.dob = meta['dob']
+            self.organizations = meta.get('orgs')
+            self.address = meta.get('locations')
+            self.comments = meta.get('comments')
+            self.bio = meta.get('bio')
+            self.emails = meta.get('emails')
+            self.social_media = meta.get('social_media')
+            self.ip = meta.get('ip')
+            self.phones = meta.get('phones')
 
 @dataclass
 class BookerOganizations(BookerDocument):
-    name: str
+    name: str = field(kw_only=True, default="")
+
     country: str = field(default="")
     bio: str = field(default="")
     organization_type: str = field(kw_only=True, default="NGO") 
+    reg_number: str = field(kw_only=True, default="") 
     members:  list[dict] = field(default_factory=list)    
     address:  list[dict] = field(default_factory=list)    
     email_formats:  list[str] = field(default_factory=list)
+    object_type = "org"
     def make_doc(self, use_json=False):
         metadata = {'name': self.name, 'country': self.country, 
-                    'members': self.members, "address": self.address,
+                    'members': self.members, "address": self.address, 'reg_number': self.reg_number,
                     'org_type': self.organization_type, 'email_formats': self.email_formats}
         if self.is_public:
             doc = {'operation_id': self.operation_id, 'type': "org", 'date': self.date_added, 
@@ -104,13 +124,27 @@ class BookerOganizations(BookerDocument):
                     'metadata': metadata}
         else:
             doc = {'operation_id': self.operation_id,  'type': "org", 'date': self.date_added, 
-                    'dataset': self.dataset, 
-                    'source_dataset': self.source_dataset, 
+                    'dataset': self.dataset,
+                    'source_dataset': self.source_dataset,
                     'private_metadata': metadata}
         if use_json:
             return json.dumps(doc)
         else:
             return doc
+    def load(self, doc):
+        if doc['type'] == 'org':
+            self.type = doc.get('type')
+            meta = doc.get('metadata')
+            if meta is None:
+                meta = doc.get('private_metadata')
+            self.name = meta.get('name')
+            self.country = meta.get('country')
+            self.bio = meta.get('bio')
+            self.organization_type = meta.get('org_type')
+            self.members = meta.get('members')
+            self.reg_number = meta.get('reg_number')
+            self.address = meta.get('address')
+            self.email_formats = meta.get('address')
 
 
 @dataclass
@@ -150,6 +184,30 @@ class BookerMember(BookerPerson):
         else:
             return doc
 
+    def load(self, doc):
+        if doc['type'] == "person":
+            self.type = doc.get('type')
+            meta = doc['metadata']
+            if meta is None:
+                meta = doc.get('private_metadata')
+            self.fname = meta['fname']
+            self.mname = meta['mname']
+            self.lname = meta['lname']
+            self.age = meta['age']
+            self.dob = meta['dob']
+            self.organizations = meta.get('orgs')
+            self.address = meta.get('locations')
+            self.comments = meta.get('comments')
+            self.bio = meta.get('bio')
+            self.emails = meta.get('emails')
+            self.social_media = meta.get('social_media')
+            self.ip = meta.get('ip')
+            self.phones = meta.get('phones')
+            self.roles = meta.get('roles')
+            self.title = meta.get('title')
+            self.start_date = meta.get('start_date')
+            self.end_date = meta.get('end_date')
+        return self
 @dataclass
 class BookerEmail(BookerDocument):
     owner: str =  field(kw_only=True)
@@ -179,6 +237,17 @@ class BookerEmail(BookerDocument):
             return json.dumps(doc)
         else:
             return doc
+    def load(self, doc):
+        if doc['type'] == 'email':
+            meta = doc.get('metadata')
+            if meta is None:
+                meta = doc.get('private_metadata')
+            self.email_domain = meta.get('email_domain')
+            self.email_username = meta.get('email_username')
+            self.email_password = meta.get('email_password')
+            self.owner = meta.get('owner')
+            self.date_seen = meta.get('date_seen')
+            self.data_breach = meta.get('data_breach')
 @dataclass
 class BookerBreach(BookerDocument):
     date: str
@@ -207,6 +276,15 @@ class BookerBreach(BookerDocument):
             return json.dumps(doc)
         else:
             return doc
+    def load(self, doc):
+        if doc['type'] == 'email':
+            meta = doc.get('metadata')
+            if meta is None:
+                meta = doc.get('private_metadata')
+            self.date = meta.get('date')
+            self.total = meta.get('total')
+            self.description = meta.get('description')
+            self.url = meta.get('url')
 
 @dataclass
 class BookerWebService(BookerDocument):
@@ -359,9 +437,9 @@ class BookerMesaage(BookerDocument):
 
 @dataclass
 class BookerAddress(BookerDocument):
-    street: str= field(kw_only=True)
-    city: str = field(kw_only=True)
-    state: str = field(kw_only=True)
+    street: str= field(kw_only=True, default="")
+    city: str = field(kw_only=True, default="")
+    state: str = field(kw_only=True, default="")
     apt: str = field(kw_only=True, default="")
     zip: str = field(kw_only=True, default="")
     members: list = field(kw_only=True, default_factory=list)
@@ -389,7 +467,19 @@ class BookerAddress(BookerDocument):
             return json.dumps(doc)
         else:
             return doc 
-
+    def load(self, doc): 
+        if doc['type'] == 'address':
+            meta = doc.get('metadata')
+            print(meta)
+            if meta is None:
+                meta = doc.get('private_metadata')
+            self.street = meta.get('street')
+            self.city = meta.get('city')
+            self.state = meta.get('state')
+            self.apt = meta.get('apt')
+            self.zip = meta.get('zip')
+            self.members = meta.get('members')
+        return self
 @dataclass
 class BookerUsername(BookerDocument):
     username: str
@@ -421,4 +511,4 @@ class BookerUsername(BookerDocument):
         if use_json:
             return json.dumps(doc)
         else:
-            return doc 
+            return doc
