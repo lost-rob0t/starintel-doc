@@ -4,7 +4,7 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 def make_id(json: str) -> str:
     return sha256(bytes(json, encoding="utf-8")).hexdigest()
 @dataclass
@@ -14,13 +14,13 @@ class BookerDocument:
         the meta data will be labled private and will
         not be gloably searched."""
     is_public: bool
-    operation_id: int = field(kw_only=True, init=True)
+    operation_id: int = field(kw_only=True, init=True, default=0)
     _id: str = field(kw_only=True, default=None) 
     _rev: str = field(kw_only=True, default=None)
     _attachments: dict = field(default_factory=dict, kw_only=True)
     owner_id: int = field(kw_only=True, default=0)
     document_id: str = field(kw_only=True, default="")
-    object_type: str = field(kw_only=True, default="")
+    type: str = field(kw_only=True, default="")
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str  = field(default="Star Intel", kw_only=True)
     date_added: str = field(default=datetime.now().isoformat(), kw_only=True)
@@ -34,7 +34,6 @@ class BookerDocument:
         if self.doc.get("_attachments", None) is not None:
             self._attachments = self.doc["_attachments"]
 
-        
 @dataclass
 class BookerPerson(BookerDocument):
     fname: str = field(kw_only=True, default="")
@@ -49,10 +48,9 @@ class BookerPerson(BookerDocument):
     ip: list[dict] = field(default_factory=list, kw_only=True)
     data_breach: list[dict] = field(default_factory=list, kw_only=True)
     emails:  list[dict] = field(default_factory=list, kw_only=True)
-    employment_history:  list[dict] = field(default_factory=list, kw_only=True)
     organizations:  list[dict] = field(default_factory=list, kw_only=True)
     comments:  list[dict] = field(default_factory=list, kw_only=True)
-    object_type = "person"
+    type = "person"
     def make_doc(self, use_json=False):
     
         metadata = {'fname': self.fname, 'mname': self.mname, 
@@ -112,7 +110,7 @@ class BookerOganizations(BookerDocument):
     members:  list[dict] = field(default_factory=list)    
     address:  list[dict] = field(default_factory=list)    
     email_formats:  list[str] = field(default_factory=list)
-    object_type = "org"
+    type = "org"
     def make_doc(self, use_json=False):
         metadata = {'name': self.name, 'country': self.country, 
                     'members': self.members, "address": self.address, 'reg_number': self.reg_number,
@@ -149,11 +147,13 @@ class BookerOganizations(BookerDocument):
 
 @dataclass
 class BookerMember(BookerPerson):
-    title: str
+    title: str = field(kw_only=True, default="")
+
     roles: list[str] = field(default_factory=list, kw_only=True)
     start_date: str = field(kw_only=True, default=datetime.now().isoformat())
     end_date: str = field(kw_only=True, default="")
 
+    type = "person"
     def make_doc(self, use_json=False):
         metadata = {
                     'roles': self.roles, 'title': self.title,
@@ -161,7 +161,7 @@ class BookerMember(BookerPerson):
                     'end_date': self.end_date, 'fname': self.fname, 'mname': self.mname, 
                         'lname': self.lname, 'age': self.age, 
                         'dob': self.dob, 'emails': self.emails, 
-                        'phones': self.phones, 'employments': self.employment_history, 
+                        'phones': self.phones, 
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
                         'bio': self.bio, 'locations': self.address}
         if self.is_public:
@@ -213,8 +213,10 @@ class BookerEmail(BookerDocument):
     owner: str =  field(kw_only=True)
     email_username: str =  field(kw_only=True, default="")
     email_domain: str = field(kw_only=True, default="")
+    email_password: str = field(kw_only=True, default="")
     date_seen: str  = field(kw_only=True, default="")
     data_breach: list[dict] = field(default_factory=list, kw_only=True)
+    type = "email"
     def make_doc(self, use_json=False):
         metadata = {'owner': self.owner, 'username': self.email_username, 
                     'domain': self.email_domain, 'seen': self.date_seen}
@@ -254,6 +256,7 @@ class BookerBreach(BookerDocument):
     total: int
     description: str
     url: str
+    type = 'breach'
     def make_doc(self, use_json=False):
         metadata = {'date': self.date, 'total': self.total, 
                     'description': self.description, 'url': self.url}
@@ -294,6 +297,7 @@ class BookerWebService(BookerDocument):
     source: str
     ip: str
     date: str
+    type = 'service'
     def make_doc(self, use_json=False):
         metadata = {'port': self.port, 'ip': self.ip, 
                     'service': self.service, 'source': self.source,
@@ -331,6 +335,7 @@ class BookerHost(BookerDocument):
     owner: str  = field(kw_only=True, default="")
     vulns: list[dict] = field(default_factory=list)
     services: list[dict] = field(default_factory=list)
+    type = 'host'
     def make_doc(self, use_json=False):
         metadata = {'ip': self.ip, 'hostname': self.hostname, 
                     'asn': self.asn, 'owner': self.owner,
@@ -396,7 +401,7 @@ class BookerMesaage(BookerDocument):
     username: str = field(kw_only=True)
     fname: str = field(kw_only=True, default="")
     lname: str = field(kw_only=True, default="")
-    phone: str = field(kw_only=True) # Used for singnal and telegram
+    phone: str = field(kw_only=True) # Used for signal and telegram
     user_id: str = field(kw_only=True, default="") # Hash the userid of the platform to keep it uniform 
     # Should be a hash of groupname, message, date and username.
     # Using this system we can track message replys across platforms amd keeps it easy
@@ -444,7 +449,7 @@ class BookerAddress(BookerDocument):
     zip: str = field(kw_only=True, default="")
     members: list = field(kw_only=True, default_factory=list)
     def make_doc(self, use_json=False):
-        metadata = {'steet': self.street, 'apt': self.apt, 
+        metadata = {'street': self.street, 'apt': self.apt, 
                     'zip': self.zip, 'state': self.state, 
                     'city': self.city, 'members': self.members}
         if self.is_public:
@@ -466,7 +471,7 @@ class BookerAddress(BookerDocument):
         if use_json:
             return json.dumps(doc)
         else:
-            return doc 
+            return doc
     def load(self, doc): 
         if doc['type'] == 'address':
             meta = doc.get('metadata')
