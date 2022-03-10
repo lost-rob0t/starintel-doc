@@ -337,6 +337,7 @@ class BookerEmail(BookerDocument):
             self.data_breach = meta.get("data_breach")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+        return self
 
 
 @dataclass
@@ -391,6 +392,7 @@ class BookerBreach(BookerDocument):
             self.url = meta.get("url")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+        return self
 
 
 @dataclass
