@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 import starintel_doc
 
@@ -9,7 +9,7 @@ setup(name="starintel_doc",
         long_description_content_type="text/markdown",
         url="https://gitlab.com/unseen-giants/starintel_doc",
         author="Nsaspy",
-        author_email="nsaspy@airmail.cc",
+        packages=find_packages(where='src'),
         license="MIT",
         classifiers=[
               "License :: OSI Approved :: MIT License",
