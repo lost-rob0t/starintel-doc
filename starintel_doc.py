@@ -49,6 +49,7 @@ class BookerPerson(BookerDocument):
     data_breach: list[dict] = field(default_factory=list, kw_only=True)
     emails:  list[dict] = field(default_factory=list, kw_only=True)
     organizations:  list[dict] = field(default_factory=list, kw_only=True)
+    education:  list[dict] = field(default_factory=list, kw_only=True)
     comments:  list[dict] = field(default_factory=list, kw_only=True)
     type = "person"
     def make_doc(self, use_json=False):
@@ -58,7 +59,7 @@ class BookerPerson(BookerDocument):
                         'dob': self.dob, 'emails': self.emails, 
                         'phones': self.phones, 
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
-                        'bio': self.bio, 'locations': self.address, "social_media": self.social_media}
+                        'bio': self.bio, 'locations': self.address, "social_media": self.social_media, 'education': self.education}
 
     
         if self.is_public:
@@ -163,7 +164,7 @@ class BookerMember(BookerPerson):
                         'dob': self.dob, 'emails': self.emails, 
                         'phones': self.phones, 
                         'ip': self.ip, 'orgs': self.organizations, 'comments': self.comments,
-                        'bio': self.bio, 'locations': self.address}
+                        'bio': self.bio, 'locations': self.address, 'education': self.education}
         if self.is_public:
             doc = {'operation_id': self.operation_id, 'type': "person", 'date': self.date_added, 
                     'dataset': self.dataset, 
@@ -448,6 +449,7 @@ class BookerAddress(BookerDocument):
     apt: str = field(kw_only=True, default="")
     zip: str = field(kw_only=True, default="")
     members: list = field(kw_only=True, default_factory=list)
+    type = 'address'
     def make_doc(self, use_json=False):
         metadata = {'street': self.street, 'apt': self.apt, 
                     'zip': self.zip, 'state': self.state, 
