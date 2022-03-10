@@ -222,6 +222,7 @@ class BookerMember(BookerPerson):
             "bio": self.bio,
             "locations": self.address,
             "education": self.education,
+            "social_media": self.social_media,
         }
         if self.is_public:
             doc = {
