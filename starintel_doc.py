@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
 
-__version__ = "0.2.7"
+__version__ = "0.2.8"
 
 
 def make_id(json: str) -> str:
@@ -125,6 +125,8 @@ class BookerPerson(BookerDocument):
             self.social_media = meta.get("social_media")
             self.ip = meta.get("ip")
             self.phones = meta.get("phones")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
 
 
 @dataclass
@@ -187,6 +189,8 @@ class BookerOganizations(BookerDocument):
             self.reg_number = meta.get("reg_number")
             self.address = meta.get("address")
             self.email_formats = meta.get("address")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
 
 
 @dataclass
@@ -270,6 +274,8 @@ class BookerMember(BookerPerson):
             self.title = meta.get("title")
             self.start_date = meta.get("start_date")
             self.end_date = meta.get("end_date")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
         return self
 
 
@@ -329,6 +335,8 @@ class BookerEmail(BookerDocument):
             self.owner = meta.get("owner")
             self.date_seen = meta.get("date_seen")
             self.data_breach = meta.get("data_breach")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
 
 
 @dataclass
@@ -381,6 +389,8 @@ class BookerBreach(BookerDocument):
             self.total = meta.get("total")
             self.description = meta.get("description")
             self.url = meta.get("url")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
 
 
 @dataclass
@@ -646,6 +656,8 @@ class BookerAddress(BookerDocument):
             self.apt = meta.get("apt")
             self.zip = meta.get("zip")
             self.members = meta.get("members")
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
         return self
 
 
