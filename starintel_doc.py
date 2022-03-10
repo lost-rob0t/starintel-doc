@@ -4,7 +4,9 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-__version__ = "0.2.3"
+
+__version__ = '0.2.7'
+
 def make_id(json: str) -> str:
     return sha256(bytes(json, encoding="utf-8")).hexdigest()
 @dataclass
