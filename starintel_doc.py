@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
 
-__version__ = "0.2.8"
+__version__ = "0.3.0"
 
 
 def make_id(json: str) -> str:
