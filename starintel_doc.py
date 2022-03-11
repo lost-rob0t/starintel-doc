@@ -109,9 +109,11 @@ class BookerPerson(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "person":
+        if doc.get("type") == "person":
             self.type = doc.get("type")
-            meta = doc["metadata"]
+            meta = doc.get("metadata")
+            if meta is None:
+                meta = doc.get("private_metadata")
             self.fname = meta["fname"]
             self.mname = meta["mname"]
             self.lname = meta["lname"]
@@ -176,7 +178,7 @@ class BookerOganizations(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "org":
+        if doc.get("type") == "org":
             self.type = doc.get("type")
             meta = doc.get("metadata")
             if meta is None:
@@ -253,7 +255,7 @@ class BookerMember(BookerPerson):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "person":
+        if doc.get("type") == "person":
             self.type = doc.get("type")
             meta = doc["metadata"]
             if meta is None:
@@ -326,7 +328,7 @@ class BookerEmail(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "email":
+        if doc.get("type") == "email":
             meta = doc.get("metadata")
             if meta is None:
                 meta = doc.get("private_metadata")
@@ -383,7 +385,7 @@ class BookerBreach(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "email":
+        if doc.get("type") == "email":
             meta = doc.get("metadata")
             if meta is None:
                 meta = doc.get("private_metadata")
@@ -648,7 +650,7 @@ class BookerAddress(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc["type"] == "address":
+        if doc.get("type") == "address":
             meta = doc.get("metadata")
             print(meta)
             if meta is None:
