@@ -30,6 +30,7 @@ class BookerDocument:
     source_dataset: str = field(default="Star Intel", kw_only=True)
     dataset: str = field(default="Star Intel", kw_only=True)
     date_added: str = field(default=datetime.now().isoformat(), kw_only=True)
+    date_updated: str = field(default=datetime.now().isoformat(), kw_only=True)
     doc: dict = field(default_factory=dict, kw_only=True)
 
     def parse_doc(self, doc):
@@ -84,7 +85,8 @@ class BookerPerson(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "person",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -94,7 +96,8 @@ class BookerPerson(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "person",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -129,6 +132,11 @@ class BookerPerson(BookerDocument):
             self.phones = meta.get("phones")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+        return self
 
 
 @dataclass
@@ -158,7 +166,8 @@ class BookerOganizations(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "org",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -167,7 +176,8 @@ class BookerOganizations(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "org",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -193,6 +203,11 @@ class BookerOganizations(BookerDocument):
             self.email_formats = meta.get("address")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            return self
 
 
 @dataclass
@@ -230,7 +245,8 @@ class BookerMember(BookerPerson):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "person",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -239,7 +255,8 @@ class BookerMember(BookerPerson):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "person",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -280,6 +297,11 @@ class BookerMember(BookerPerson):
             self.end_date = meta.get("end_date")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+
         return self
 
 
@@ -304,7 +326,8 @@ class BookerEmail(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "email",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -313,7 +336,8 @@ class BookerEmail(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "email",
-                "date": self.date_added,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -341,6 +365,11 @@ class BookerEmail(BookerDocument):
             self.data_breach = meta.get("data_breach")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+
         return self
 
 
@@ -363,6 +392,8 @@ class BookerBreach(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "breach",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -371,6 +402,8 @@ class BookerBreach(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "breach",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -422,6 +455,8 @@ class BookerWebService(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "web_service",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "metadata": metadata,
@@ -430,6 +465,8 @@ class BookerWebService(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "web_service",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "private_metadata": metadata,
@@ -477,6 +514,8 @@ class BookerHost(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "host",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "metadata": metadata,
@@ -485,6 +524,8 @@ class BookerHost(BookerDocument):
             doc = {
                 "operation_id": self.operation_id,
                 "type": "host",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -517,6 +558,8 @@ class BookerCVE(BookerDocument):
         if self.is_public:
             doc = {
                 "type": "cve",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -524,6 +567,8 @@ class BookerCVE(BookerDocument):
         else:
             doc = {
                 "type": "cve",
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -581,6 +626,8 @@ class BookerMesaage(BookerDocument):
                 "operation_id": self.operation_id,
                 "type": "message",
                 "dataset": self.dataset,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
             }
@@ -589,6 +636,8 @@ class BookerMesaage(BookerDocument):
                 "operation_id": self.operation_id,
                 "type": "message",
                 "dataset": self.dataset,
+                "date_added": self.date_added,
+                "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
             }
@@ -664,6 +713,11 @@ class BookerAddress(BookerDocument):
             self.members = meta.get("members")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+
         return self
 
 
