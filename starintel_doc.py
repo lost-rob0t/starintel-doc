@@ -257,9 +257,10 @@ class BookerMember(BookerPerson):
     def load(self, doc):
         if doc.get("type") == "person":
             self.type = doc.get("type")
-            meta = doc["metadata"]
+            meta = doc.get("metadata")
             if meta is None:
                 meta = doc.get("private_metadata")
+
             self.fname = meta["fname"]
             self.mname = meta["mname"]
             self.lname = meta["lname"]
