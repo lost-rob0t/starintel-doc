@@ -90,6 +90,7 @@ class BookerPerson(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
 
         else:
@@ -101,6 +102,7 @@ class BookerPerson(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
@@ -136,6 +138,7 @@ class BookerPerson(BookerDocument):
             self.date_updated = doc.get("date_updated")
             self.source_dataset = doc.get("source_dataset")
             self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
         return self
 
 
@@ -171,6 +174,7 @@ class BookerOganizations(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -181,6 +185,7 @@ class BookerOganizations(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if use_json:
             return json.dumps(doc)
@@ -207,7 +212,8 @@ class BookerOganizations(BookerDocument):
             self.date_updated = doc.get("date_updated")
             self.source_dataset = doc.get("source_dataset")
             self.dataset = doc.get("dataset")
-            return self
+            self.owner_id = doc.get("owner_id")
+        return self
 
 
 @dataclass
@@ -250,6 +256,7 @@ class BookerMember(BookerPerson):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -260,6 +267,7 @@ class BookerMember(BookerPerson):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
@@ -302,6 +310,7 @@ class BookerMember(BookerPerson):
             self.source_dataset = doc.get("source_dataset")
             self.dataset = doc.get("dataset")
 
+            self.owner_id = doc.get("owner_id")
         return self
 
 
@@ -331,6 +340,7 @@ class BookerEmail(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -341,6 +351,7 @@ class BookerEmail(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
@@ -369,6 +380,7 @@ class BookerEmail(BookerDocument):
             self.date_updated = doc.get("date_updated")
             self.source_dataset = doc.get("source_dataset")
             self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
 
         return self
 
@@ -397,6 +409,7 @@ class BookerBreach(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -407,6 +420,7 @@ class BookerBreach(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
@@ -429,6 +443,7 @@ class BookerBreach(BookerDocument):
             self.url = meta.get("url")
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
+            self.owner_id = doc.get("owner_id")
         return self
 
 
@@ -460,6 +475,7 @@ class BookerWebService(BookerDocument):
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -470,6 +486,7 @@ class BookerWebService(BookerDocument):
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
 
         if self._id:
@@ -519,6 +536,7 @@ class BookerHost(BookerDocument):
                 "source_dataset": self.source_dataset,
                 "dataset": self.dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -529,6 +547,7 @@ class BookerHost(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
@@ -563,6 +582,7 @@ class BookerCVE(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -572,6 +592,7 @@ class BookerCVE(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
 
         if self._id:
@@ -630,6 +651,7 @@ class BookerMesaage(BookerDocument):
                 "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -640,6 +662,7 @@ class BookerMesaage(BookerDocument):
                 "date_updated": self.date_updated,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
 
         if self._id:
@@ -679,6 +702,7 @@ class BookerAddress(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -687,6 +711,7 @@ class BookerAddress(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
 
         if self._id:
@@ -717,6 +742,7 @@ class BookerAddress(BookerDocument):
             self.date_updated = doc.get("date_updated")
             self.source_dataset = doc.get("source_dataset")
             self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
 
         return self
 
@@ -737,7 +763,7 @@ class BookerUsername(BookerDocument):
             "owner": self.owner,
             "email": self.email,
             "phone": self.phone,
-            "members": self.org,
+            "membership": self.org,
         }
         if self.is_public:
             doc = {
@@ -746,6 +772,7 @@ class BookerUsername(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
+                "owner_id": self.owner_id
             }
         else:
             doc = {
@@ -754,6 +781,7 @@ class BookerUsername(BookerDocument):
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
+                "owner_id": self.owner_id
             }
         if self._id:
             doc["_id"] = self._id
