@@ -312,6 +312,17 @@ class BookerMember(BookerPerson):
 
             self.owner_id = doc.get("owner_id")
         return self
+    def resolve(self, client):
+        resolved_emails = []
+        resolved_phones = []
+        resolved_orgs = []
+        resolved_ip = []
+        resolved_social_media = []
+        for id in self.emails:
+            doc_ = client.get(id)
+            if doc_ is not None:
+
+
 
 
 @dataclass
@@ -792,3 +803,10 @@ class BookerUsername(BookerDocument):
             return json.dumps(doc)
         else:
             return doc
+
+
+def load_doc(client, doc):
+    if doc is not None:
+        type = doc.get("type")
+        if type is None:
+            pass
