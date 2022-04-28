@@ -3,9 +3,8 @@ from setuptools import setup, find_packages
 
 setup(
     name="starintel_doc",
-    version="0.4.8",
+    version="0.4.9",
     description="Document Spec for Star intel",
-    long_description=open("readme_pypi.md", "r").read(),
     long_description_content_type="text/markdown",
     url="https://gitlab.com/unseen-giants/starintel_doc",
     author="Nsaspy",
