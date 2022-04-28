@@ -5,8 +5,8 @@ from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
 import couchdb2
-from  . import exceptions
-__version__ = "0.4.0"
+import star_exceptions
+__version__ = "0.4.5"
 
 
 def make_id(json: str) -> str:
@@ -176,7 +176,7 @@ class BookerPerson(BookerDocument):
                     elif dtype == "membership":
                         resolved_memberships.append(BookerMembership().load(doc_))
                 except KeyError:
-                    raise exceptions.TypeMissingError()
+                    raise star_exceptions.TypeMissingError()
 
 
 
@@ -261,7 +261,7 @@ class BookerEmail(BookerDocument):
     email_username: str = field(kw_only=True, default="")
     email_domain: str = field(kw_only=True, default="")
     email_password: str = field(kw_only=True, default="")
-    data_breach: list[string] = field(default_factory=list, kw_only=True)
+    data_breach: list[str] = field(default_factory=list, kw_only=True)
     username: dict = field(kw_only=True, default_factory=dict)
     type = "email"
 
@@ -553,7 +553,7 @@ class BookerCVE(BookerDocument):
     type = "cve"
     def make_doc(self, use_json=False):
         metadata = {
-            "cve_number": cve_number,
+            "cve_number": self.cve_number,
             "score": self.score,
         }
         if self.is_public:
@@ -759,8 +759,8 @@ class BookerUsername(BookerDocument):
     owner: str = field(kw_only=True, default="")
     email: str = field(kw_only=True, default="")
     phone: str = field(kw_only=True, default="")
-    orgs: list[string] = field(kw_only=True, default_factory=list)
-    type = username
+    orgs: list[str] = field(kw_only=True, default_factory=list)
+    type = "username"
     def make_doc(self, use_json=False):
         metadata = {
             "username": self.username,
@@ -811,7 +811,7 @@ class BookerUsername(BookerDocument):
             self.platform = meta["platform"]
             self.email = meta["email"]
         except KeyError:
-            raise exceptions.DocumentParseError()
+            raise star_exceptions.DocumentParseError()
 
 
 @dataclass
@@ -871,7 +871,7 @@ class BookerPhone(BookerDocument):
             self.carrier = meta.get("carrier")
             self.owner = meta.get("owner")
         except KeyError:
-            raise exceptions.ParseDocumentError()
+            raise star_exceptions.ParseDocumentError()
 
 @dataclass
 class BookerMembership(BookerDocument):
@@ -944,7 +944,7 @@ def get_meta(doc):
 
     # if meta is still None the type field is not set.
     if meta is None:
-        raise exceptions.TypeMissingError()
+        raise star_exceptions.TypeMissingError()
     else:
         return meta
 
@@ -954,17 +954,17 @@ def load_doc(client, doc):
     if doc is not None:
         type = doc.get("type")
         if type is None:
-            raise exceptions.TypeMissingError()
+            raise star_exceptions.TypeMissingError()
         else:
             if type == "person":
-                obj = BookerMember().load(doc)
+                obj = BookerPerson().load(doc)
             elif type == "org":
-                obj = BookerOrganization().load(doc)
+                obj = BookerOganizations().load(doc)
             elif type == "email":
                 obj = BookerEmail().load(doc)
             elif type == "address":
                 obj = BookerAddress().load(doc)
         if obj is None:
-            raise exceptions.DocumentParseError("Failed to load document becuase a type could not be matched")
+            raise star_exceptions.DocumentParseError("Failed to load document becuase a type could not be matched")
         else:
             return obj
