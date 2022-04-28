@@ -16,6 +16,7 @@ stdenv.mkDerivation {
     zlib ];
   src = null;
   shellHook = ''
+    pipenv install --dev python-language-server[all] setuptools twine pre-commit
     pipenv install -r requirments.txt
     pipenv shell
   '';
