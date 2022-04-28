@@ -11,6 +11,8 @@ python-language-server = {extras = ["all"], version = "*"}
 setuptools = "*"
 pre-commit = "*"
 twine = "*"
+pdoc = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.10"
