@@ -6,7 +6,7 @@ from hashlib import sha256
 from datetime import datetime
 import couchdb2
 import star_exceptions
-__version__ = "0.4.5"
+__version__ = "0.4.7"
 
 
 def make_id(json: str) -> str:
@@ -53,6 +53,8 @@ class BookerPerson(BookerDocument):
     fname: str = field(kw_only=True, default="")
     lname: str = field(kw_only=True, default="")
     mname: str = field(default="", kw_only=True)
+    gender: str = field(default="", kw_only=True)
+    political_party: str = field(default="", kw_only=True)
     bio: str = field(default="", kw_only=True)
     age: int = field(default=0, kw_only=True)
     dob: str = field(default="", kw_only=True)
@@ -85,7 +87,9 @@ class BookerPerson(BookerDocument):
             "locations": self.address,
             "social_media": self.social_media,
             "education": self.education,
-            "memberships": self.memberships
+            "memberships": self.memberships,
+            "gender": self.gender,
+            "polititcal_party": self.political_party,
         }
 
         if self.is_public:
@@ -146,8 +150,10 @@ class BookerPerson(BookerDocument):
             self.ip = meta.get("ip")
             self.phones = meta.get("phones")
             self.memberships = meta.get("memberships")
-
+            self.gender = meta.get("gender")
+            self.political_party = meta.get("political_party")
         return self
+
     def resolve(self, client):
         """For each remote document load and build a BookerDocument.
            This function returns BookerDocuments for each of the different arrays.
@@ -855,7 +861,8 @@ class BookerPhone(BookerDocument):
     owner:  str = field(kw_only=True, default="")
     phone: str = field(kw_only=True, default="")
     carrier: str = field(kw_only=True, default="")
-    status: str = field(kw_only=True, default="N/A")
+    status: str = field(kw_only=True, default="")
+    phone_type: str = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
         """Build a document. To generate a json document set `use_json` to `True`"""
@@ -863,6 +870,7 @@ class BookerPhone(BookerDocument):
             "owner": self.owner,
             "phone": self.phone,
             "carrier": self.carrier,
+            "phone_type": self.phone_type
         }
         if self.is_public:
             doc = {
@@ -908,6 +916,7 @@ class BookerPhone(BookerDocument):
             self.phone = meta.get("phone")
             self.carrier = meta.get("carrier")
             self.owner = meta.get("owner")
+            self.phone_type = meta.get("phone_type")
         except KeyError:
             raise star_exceptions.ParseDocumentError()
 
