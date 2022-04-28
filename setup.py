@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="starintel_doc",
-    version="0.4.5",
+    version="0.4.6",
     description="Document Spec for Star intel",
-    long_description=open("README.md", "r").read(),
-    long_description_content_type="text/markdown",
+    long_description=open("README.org", "r").read(),
+    long_description_content_type="text/org",
     url="https://gitlab.com/unseen-giants/starintel_doc",
     author="Nsaspy",
     license="MIT",
