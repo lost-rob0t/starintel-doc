@@ -4,8 +4,9 @@ import uuid
 from dataclasses import dataclass, field
 from hashlib import sha256
 from datetime import datetime
-
-__version__ = "0.3.0"
+import couchdb2
+import star_exceptions
+__version__ = "0.4.7"
 
 
 def make_id(json: str) -> str:
@@ -14,12 +15,12 @@ def make_id(json: str) -> str:
 
 @dataclass
 class BookerDocument:
-    """Class for Documents to be stored in Booker
+    """Meta Class for documents to be stored in starintel.
     If the Document is labeled private then
-    the meta data will be labled private and will
+    the meta data will be labeled private and will
     not be gloably searched."""
 
-    is_public: bool
+    is_public: bool = field(kw_only=True, init=True, default=True)
     operation_id: int = field(kw_only=True, init=True, default=0)
     _id: str = field(kw_only=True, default=None)
     _rev: str = field(kw_only=True, default=None)
@@ -45,25 +46,32 @@ class BookerDocument:
 
 @dataclass
 class BookerPerson(BookerDocument):
+    """Person class.
+       WARNING: When creating a person document, make sure to only place document id
+       if you do not the resolve method will be useless and whats the point of metadata?""
+    """
     fname: str = field(kw_only=True, default="")
     lname: str = field(kw_only=True, default="")
     mname: str = field(default="", kw_only=True)
+    gender: str = field(default="", kw_only=True)
+    political_party: str = field(default="", kw_only=True)
     bio: str = field(default="", kw_only=True)
     age: int = field(default=0, kw_only=True)
     dob: str = field(default="", kw_only=True)
-    social_media: list = field(default_factory=list, kw_only=True)
-    phones: list[dict] = field(default_factory=list, kw_only=True)
-    address: list[dict] = field(default_factory=list, kw_only=True)
-    ip: list[dict] = field(default_factory=list, kw_only=True)
-    data_breach: list[dict] = field(default_factory=list, kw_only=True)
-    emails: list[dict] = field(default_factory=list, kw_only=True)
-    organizations: list[dict] = field(default_factory=list, kw_only=True)
+    social_media: list[str] = field(default_factory=list, kw_only=True)
+    phones: list[str] = field(default_factory=list, kw_only=True)
+    address: list[str] = field(default_factory=list, kw_only=True)
+    ip: list[str] = field(default_factory=list, kw_only=True)
+    data_breach: list[str] = field(default_factory=list, kw_only=True)
+    emails: list[str] = field(default_factory=list, kw_only=True)
+    organizations: list[str] = field(default_factory=list, kw_only=True)
+    memberships: list[str] = field(default_factory=list, kw_only=True)
     education: list[dict] = field(default_factory=list, kw_only=True)
     comments: list[dict] = field(default_factory=list, kw_only=True)
     type = "person"
 
     def make_doc(self, use_json=False):
-
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "fname": self.fname,
             "mname": self.mname,
@@ -79,6 +87,9 @@ class BookerPerson(BookerDocument):
             "locations": self.address,
             "social_media": self.social_media,
             "education": self.education,
+            "memberships": self.memberships,
+            "gender": self.gender,
+            "polititcal_party": self.political_party,
         }
 
         if self.is_public:
@@ -114,11 +125,17 @@ class BookerPerson(BookerDocument):
             return doc
 
     def load(self, doc):
+        """Load a document from json."""
         if doc.get("type") == "person":
-            self.type = doc.get("type")
-            meta = doc.get("metadata")
-            if meta is None:
-                meta = doc.get("private_metadata")
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
+
             self.fname = meta["fname"]
             self.mname = meta["mname"]
             self.lname = meta["lname"]
@@ -132,18 +149,58 @@ class BookerPerson(BookerDocument):
             self.social_media = meta.get("social_media")
             self.ip = meta.get("ip")
             self.phones = meta.get("phones")
-            self._id = doc.get("_id")
-            self._rev = doc.get("_rev")
-            self.date_added = doc.get("date_added")
-            self.date_updated = doc.get("date_updated")
-            self.source_dataset = doc.get("source_dataset")
-            self.dataset = doc.get("dataset")
-            self.owner_id = doc.get("owner_id")
+            self.memberships = meta.get("memberships")
+            self.gender = meta.get("gender")
+            self.political_party = meta.get("political_party")
         return self
+
+    def resolve(self, client):
+        """For each remote document load and build a BookerDocument.
+           This function returns BookerDocuments for each of the different arrays.
+           """
+        resolved_emails = []
+        resolved_phones = []
+        resolved_orgs = []
+        resolved_social_media = []
+        resolved_ip = []
+        resolved_memberships = []
+        ids = []
+        ids = ids.extend(self.organizations)
+        ids = ids.extend(self.emails)
+        ids = ids.extend(self.address)
+        ids = ids.extend(self.phones)
+        ids = ids.extend(self.ip)
+        ids = ids.extend(self.social_media)
+        ids = ids.extend(self.memberships)
+        docs = client.get_bulk(ids)
+
+        for doc_ in docs:
+            if doc_ is not None:
+                try:
+                    dtype = doc_['type']
+                    if dtype == "email":
+                        resolved_emails.append(BookerEmail().load(doc_))
+                    elif dtype == "org":
+                        resolved_orgs.append(BookerOganizations().load(doc_))
+                    elif dtype == "phone":
+                        resolved_phones.append(BookerPhone().load(doc_))
+                    elif dtype == "username":
+                        resolved_social_media.append(BookerUsername().load(doc_))
+                    elif dtype == "membership":
+                        resolved_memberships.append(BookerMembership().load(doc_))
+                except KeyError:
+                    raise star_exceptions.TypeMissingError()
+
+    def make_id(self):
+        hinput = self.fname + self.mname + self.lname + self.dob
+        self._id = make_id(hinput)
+        return self._id
 
 
 @dataclass
 class BookerOganizations(BookerDocument):
+    """Organization class. You should use this for NGO, governmental agencies and corpations."""
+
     name: str = field(kw_only=True, default="")
 
     country: str = field(default="")
@@ -156,6 +213,7 @@ class BookerOganizations(BookerDocument):
     type = "org"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "name": self.name,
             "country": self.country,
@@ -193,11 +251,17 @@ class BookerOganizations(BookerDocument):
             return doc
 
     def load(self, doc):
+        """Load a document from json."""
         if doc.get("type") == "org":
-            self.type = doc.get("type")
-            meta = doc.get("metadata")
-            if meta is None:
-                meta = doc.get("private_metadata")
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
+
             self.name = meta.get("name")
             self.country = meta.get("country")
             self.bio = meta.get("bio")
@@ -206,141 +270,32 @@ class BookerOganizations(BookerDocument):
             self.reg_number = meta.get("reg_number")
             self.address = meta.get("address")
             self.email_formats = meta.get("address")
-            self._id = doc.get("_id")
-            self._rev = doc.get("_rev")
-            self.date_added = doc.get("date_added")
-            self.date_updated = doc.get("date_updated")
-            self.source_dataset = doc.get("source_dataset")
-            self.dataset = doc.get("dataset")
-            self.owner_id = doc.get("owner_id")
+
         return self
 
-
-@dataclass
-class BookerMember(BookerPerson):
-    title: str = field(kw_only=True, default="")
-
-    roles: list[str] = field(default_factory=list, kw_only=True)
-    start_date: str = field(kw_only=True, default=datetime.now().isoformat())
-    end_date: str = field(kw_only=True, default="")
-
-    type = "person"
-
-    def make_doc(self, use_json=False):
-        metadata = {
-            "roles": self.roles,
-            "title": self.title,
-            "start_date": self.start_date,
-            "end_date": self.end_date,
-            "fname": self.fname,
-            "mname": self.mname,
-            "lname": self.lname,
-            "age": self.age,
-            "dob": self.dob,
-            "emails": self.emails,
-            "phones": self.phones,
-            "ip": self.ip,
-            "orgs": self.organizations,
-            "comments": self.comments,
-            "bio": self.bio,
-            "locations": self.address,
-            "education": self.education,
-            "social_media": self.social_media,
-        }
-        if self.is_public:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "person",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        else:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "person",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "private_metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        if self._id:
-            doc["_id"] = self._id
-        if self._rev:
-            doc["_rev"] = self._rev
-
-        if use_json:
-            return json.dumps(doc)
-        else:
-            return doc
-
-    def load(self, doc):
-        if doc.get("type") == "person":
-            self.type = doc.get("type")
-            meta = doc.get("metadata")
-            if meta is None:
-                meta = doc.get("private_metadata")
-
-            self.fname = meta["fname"]
-            self.mname = meta["mname"]
-            self.lname = meta["lname"]
-            self.age = meta["age"]
-            self.dob = meta["dob"]
-            self.organizations = meta.get("orgs")
-            self.address = meta.get("locations")
-            self.comments = meta.get("comments")
-            self.bio = meta.get("bio")
-            self.emails = meta.get("emails")
-            self.social_media = meta.get("social_media")
-            self.ip = meta.get("ip")
-            self.phones = meta.get("phones")
-            self.roles = meta.get("roles")
-            self.title = meta.get("title")
-            self.start_date = meta.get("start_date")
-            self.end_date = meta.get("end_date")
-            self._id = doc.get("_id")
-            self._rev = doc.get("_rev")
-            self.date_added = doc.get("date_added")
-            self.date_updated = doc.get("date_updated")
-            self.source_dataset = doc.get("source_dataset")
-            self.dataset = doc.get("dataset")
-
-            self.owner_id = doc.get("owner_id")
-        return self
-    def resolve(self, client):
-        resolved_emails = []
-        resolved_phones = []
-        resolved_orgs = []
-        resolved_ip = []
-        resolved_social_media = []
-        for id in self.emails:
-            doc_ = client.get(id)
-            if doc_ is not None:
-
-
-
+    def make_id(self):
+        hinput = self.name + self.country
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerEmail(BookerDocument):
+    """Email class. This class also serves as a psuedo email:pass combo"""
     owner: str = field(kw_only=True)
     email_username: str = field(kw_only=True, default="")
     email_domain: str = field(kw_only=True, default="")
     email_password: str = field(kw_only=True, default="")
-    date_seen: str = field(kw_only=True, default="")
-    data_breach: list[dict] = field(default_factory=list, kw_only=True)
+    data_breach: list[str] = field(default_factory=list, kw_only=True)
+    username: dict = field(kw_only=True, default_factory=dict)
     type = "email"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "owner": self.owner,
-            "username": self.email_username,
-            "domain": self.email_domain,
-            "seen": self.date_seen,
+            "email_username": self.email_username,
+            "username": self.username,
+            "email_domain": self.email_domain
         }
         if self.is_public:
             doc = {
@@ -375,16 +330,9 @@ class BookerEmail(BookerDocument):
             return doc
 
     def load(self, doc):
+        """Load a document from json."""
         if doc.get("type") == "email":
-            meta = doc.get("metadata")
-            if meta is None:
-                meta = doc.get("private_metadata")
-            self.email_domain = meta.get("email_domain")
-            self.email_username = meta.get("email_username")
-            self.email_password = meta.get("email_password")
-            self.owner = meta.get("owner")
-            self.date_seen = meta.get("date_seen")
-            self.data_breach = meta.get("data_breach")
+            meta = get_meta(doc)
             self._id = doc.get("_id")
             self._rev = doc.get("_rev")
             self.date_added = doc.get("date_added")
@@ -393,8 +341,30 @@ class BookerEmail(BookerDocument):
             self.dataset = doc.get("dataset")
             self.owner_id = doc.get("owner_id")
 
+            self.email_domain = meta.get("email_domain")
+            self.email_username = meta.get("email_username")
+            self.username = meta.get("username")
+            self.email_password = meta.get("email_password")
+            self.owner = meta.get("owner")
+            self.date_seen = meta.get("date_seen")
+            self.data_breach = meta.get("data_breach")
         return self
 
+    def make_resolve(self):
+        """Builds a dict for a resolve result"""
+        data = {}
+        data["email"] = self.email_username + "@" + self.email_domain
+        data["password"] = self.email_password
+        data["data_breaches"] = []
+        for breach in self.data_breach:
+            data["data_breaches"].append(breach)
+        data["owner"] = self.owner
+        return data
+
+    def make_id(self):
+        hinput = self.email_username + self.email_domain + self.email_password
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerBreach(BookerDocument):
@@ -405,6 +375,7 @@ class BookerBreach(BookerDocument):
     type = "breach"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "date": self.date,
             "total": self.total,
@@ -444,19 +415,26 @@ class BookerBreach(BookerDocument):
             return doc
 
     def load(self, doc):
-        if doc.get("type") == "email":
-            meta = doc.get("metadata")
-            if meta is None:
-                meta = doc.get("private_metadata")
+        """Load a document from json."""
+        if doc.get("type") == "breach":
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
             self.date = meta.get("date")
             self.total = meta.get("total")
             self.description = meta.get("description")
             self.url = meta.get("url")
-            self._id = doc.get("_id")
-            self._rev = doc.get("_rev")
-            self.owner_id = doc.get("owner_id")
         return self
 
+    def make_doc(self):
+        hinput = self.url
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerWebService(BookerDocument):
@@ -465,17 +443,19 @@ class BookerWebService(BookerDocument):
     service_version: str
     source: str
     ip: str
-    date: str
+    owner: str
     type = "service"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "port": self.port,
             "ip": self.ip,
-            "service": self.service,
+            "name": self.service,
             "source": self.source,
             "date": self.date,
             "version": self.end_date,
+            "owner": self.owner
         }
         if self.is_public:
             doc = {
@@ -509,7 +489,27 @@ class BookerWebService(BookerDocument):
             return json.dumps(doc)
         else:
             return doc
+    def load(self, doc):
+        """Load a document from json."""
+        if doc.get("type") == "service":
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset", "")
+            self.owner_id = doc.get("owner_id", "")
+            self.port = meta.get("port", "")
+            self.ip = meta.get("ip", "")
+            self.service_version = meta.get("version", "")
+            self.service_name = meta.get("name", "")
+        return self
 
+    def make_id(self):
+        hinput = self.ip + self.port + self.service_name + self.service_version
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerHost(BookerDocument):
@@ -526,12 +526,12 @@ class BookerHost(BookerDocument):
     type = "host"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "ip": self.ip,
             "hostname": self.hostname,
             "asn": self.asn,
             "owner": self.owner,
-            "date": self.date,
             "network_name": self.network_name,
             "country": self.country,
             "os": self.operating_system,
@@ -570,20 +570,43 @@ class BookerHost(BookerDocument):
         else:
             return doc
 
+    def load(self, doc):
+        """Load a document from json."""
+        if doc.get("type") == "host":
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
+            self.services = doc.get("services")
+            self.hostname = doc.get("hostname")
+            self.asn = doc.get("asn")
+            self.owner = doc.get("owner")
+            self.network_name = doc.get("network_name")
+            self.operating_system = doc.get("os")
+            self.vulns = doc.get("vulns")
+            self.country = doc.get("country")
+            self.ip = doc.get("ip")
+        return self
+
+    def make_id(self):
+        hinput = self.ip + self.hostname
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerCVE(BookerDocument):
     cve_number: str
-    date: str
     score: int
-    host_id: str
-
+    type = "cve"
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
-            "cve": cve_number,
-            "date": self.date,
+            "cve_number": self.cve_number,
             "score": self.score,
-            "host": self.host_id,
         }
         if self.is_public:
             doc = {
@@ -617,8 +640,26 @@ class BookerCVE(BookerDocument):
             return doc
 
 
+    def load(self, doc):
+        """Load a document from json."""
+        if doc.get("type") == "cve":
+            meta = get_meta(doc)
+            self._id = doc.get("_id")
+            self._rev = doc.get("_rev")
+            self.date_added = doc.get("date_added")
+            self.date_updated = doc.get("date_updated")
+            self.source_dataset = doc.get("source_dataset")
+            self.dataset = doc.get("dataset")
+            self.owner_id = doc.get("owner_id")
+            self.cve_number = meta.get("cve_number")
+            self.score = meta.get("score")
+    def make_id(self):
+        self._id = make_id(self.cve_number)
+        return self._id
+
 @dataclass
 class BookerMesaage(BookerDocument):
+    """Class For a instant message. This is best suited for Discord/telegram like chat services."""
     platform: str  # Domain of platform aka telegram.org. discord.gg
     media: bool
     username: str = field(kw_only=True)
@@ -639,6 +680,7 @@ class BookerMesaage(BookerDocument):
     reply_id: str = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "platform": self.platform,
             "date": self.date,
@@ -647,11 +689,11 @@ class BookerMesaage(BookerDocument):
             "message": self.message,
             "message_type": self.message_type,
             "user_id": self.user_id,
-            "fname": self.fname,
-            "lname": self.lname,
             "message_id": self.message_id,
             "date": self.date_added,
             "is_media": self.media,
+            "fname": self.fname,
+            "lname": self.lname,
         }
         if self.is_public:
             doc = {
@@ -686,9 +728,27 @@ class BookerMesaage(BookerDocument):
         else:
             return doc
 
+    def load(self, doc):
+        """Load a document from json."""
+        meta = get_meta(doc)
+        self._id = doc.get("_id")
+        self._rev = doc.get("_rev")
+        self.date_added = doc.get("date_added")
+        self.date_updated = doc.get("date_updated")
+        self.source_dataset = doc.get("source_dataset")
+        self.dataset = doc.get("dataset")
+        self.owner_id = doc.get("owner_id")
+        self.fname = doc.get("fname")
+        self.lname = doc.get("lname")
+
+    def make_id(self):
+        hinput = self.message + self.channel_name + self.group_name + self.date_added + self.username
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerAddress(BookerDocument):
+    """Class for an Adress. Currently only for US addresses but may work with others."""
     street: str = field(kw_only=True, default="")
     city: str = field(kw_only=True, default="")
     state: str = field(kw_only=True, default="")
@@ -698,6 +758,7 @@ class BookerAddress(BookerDocument):
     type = "address"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "street": self.street,
             "apt": self.apt,
@@ -736,9 +797,9 @@ class BookerAddress(BookerDocument):
             return doc
 
     def load(self, doc):
+        """Load a document from json."""
         if doc.get("type") == "address":
             meta = doc.get("metadata")
-            print(meta)
             if meta is None:
                 meta = doc.get("private_metadata")
             self.street = meta.get("street")
@@ -757,17 +818,24 @@ class BookerAddress(BookerDocument):
 
         return self
 
+    def make_id(self):
+        hinput = self.street + self.city + self.state + self.zip
+        self._id = make_id(hinput)
+        return self._id
 
 @dataclass
 class BookerUsername(BookerDocument):
+    """Class for Online username. has no specifics use to represent a online prescense."""
     username: str
     platform: str
     owner: str = field(kw_only=True, default="")
     email: str = field(kw_only=True, default="")
     phone: str = field(kw_only=True, default="")
-    org: str = field(kw_only=True, default="")
+    orgs: list[str] = field(kw_only=True, default_factory=list)
+    type = "username"
 
     def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "username": self.username,
             "platform": self.platform,
@@ -779,7 +847,7 @@ class BookerUsername(BookerDocument):
         if self.is_public:
             doc = {
                 "operation_id": self.operation_id,
-                "type": "address",
+                "type": "username",
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "metadata": metadata,
@@ -788,7 +856,72 @@ class BookerUsername(BookerDocument):
         else:
             doc = {
                 "operation_id": self.operation_id,
-                "type": "adress",
+                "type": "username",
+                "dataset": self.dataset,
+                "source_dataset": self.source_dataset,
+                "private_metadata": metadata,
+                "owner_id": self.owner_id
+            }
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
+        if use_json:
+            return json.dumps(doc)
+        else:
+            return doc
+
+    def load(self, doc):
+        """Load a document from json."""
+        meta = get_meta(doc)
+        self._id = doc.get("_id")
+        self._rev = doc.get("_rev")
+        self.date_added = doc.get("date_added")
+        self.date_updated = doc.get("date_updated")
+        self.source_dataset = doc.get("source_dataset")
+        self.dataset = doc.get("dataset")
+        self.owner_id = doc.get("owner_id")
+        try:
+            self.username = meta["username"]
+            self.platform = meta["platform"]
+            self.email = meta["email"]
+        except KeyError:
+            raise star_exceptions.DocumentParseError()
+    def make_id(self):
+        self._id = make_id(self.username + self.platform)
+        return self._id
+
+@dataclass
+class BookerPhone(BookerDocument):
+    """Class for phone numbers."""
+    owner:  str = field(kw_only=True, default="")
+    phone: str = field(kw_only=True, default="")
+    carrier: str = field(kw_only=True, default="")
+    status: str = field(kw_only=True, default="")
+    phone_type: str = field(kw_only=True, default="")
+
+    def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
+        metadata = {
+            "owner": self.owner,
+            "phone": self.phone,
+            "carrier": self.carrier,
+            "phone_type": self.phone_type
+        }
+        if self.is_public:
+            doc = {
+                "operation_id": self.operation_id,
+                "type": "username",
+                "dataset": self.dataset,
+                "source_dataset": self.source_dataset,
+                "metadata": metadata,
+                "owner_id": self.owner_id
+            }
+        else:
+            doc = {
+                "operation_id": self.operation_id,
+                "type": "username",
                 "dataset": self.dataset,
                 "source_dataset": self.source_dataset,
                 "private_metadata": metadata,
@@ -805,8 +938,126 @@ class BookerUsername(BookerDocument):
             return doc
 
 
+    def load(self, doc):
+        """Load a document from json."""
+        meta = get_meta(doc)
+        self._id = doc.get("_id")
+        self._rev = doc.get("_rev")
+        self.date_added = doc.get("date_added")
+        self.date_updated = doc.get("date_updated")
+        self.source_dataset = doc.get("source_dataset")
+        self.dataset = doc.get("dataset")
+        self.owner_id = doc.get("owner_id")
+
+        try:
+            self.phone = meta.get("phone")
+            self.carrier = meta.get("carrier")
+            self.owner = meta.get("owner")
+            self.phone_type = meta.get("phone_type")
+        except KeyError:
+            raise star_exceptions.ParseDocumentError()
+    def make_id(self):
+        self._id = make_id(self.phone + self.owner_id + self.carrier)
+        return self._id
+
+@dataclass
+class BookerMembership(BookerDocument):
+    """Class for tracking a person's membership(s).
+        a membership is any relation between BookerOrganizations or BookerPerson
+        This Class is still WIP."""
+    type = "membership"
+    start_date:  str = field(kw_only=True, default="")
+    end_date:  str = field(kw_only=True, default="")
+    roles: list = field(kw_only=True, default_factory=list())
+    title:  str = field(kw_only=True, default="")
+
+    def load(self, doc):
+        """Load a document from json."""
+        meta = get_meta(doc)
+        self._id = doc.get("_id")
+        self._rev = doc.get("_rev")
+        self.date_added = doc.get("date_added")
+        self.date_updated = doc.get("date_updated")
+        self.source_dataset = doc.get("source_dataset")
+        self.dataset = doc.get("dataset")
+        self.owner_id = doc.get("owner_id")
+
+        try:
+            self.start_date = meta.get("start_date")
+            self.end_date = meta.get("end_date")
+            self.roles = meta.get("roles")
+            self.title = meta.get("title")
+        except KeyError:
+            raise star_exceptions.ParseDocumentError
+
+    def make_doc(self, use_json=False):
+        """Build a document. To generate a json document set `use_json` to `True`"""
+        metadata = {
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+            "roles": self.roles,
+            "title": self.title
+        }
+        if self.is_public:
+            doc = {
+                "operation_id": self.operation_id,
+                "type": "membership",
+                "dataset": self.dataset,
+                "source_dataset": self.source_dataset,
+                "metadata": metadata,
+                "owner_id": self.owner_id
+            }
+        else:
+            doc = {
+                "operation_id": self.operation_id,
+                "type": "membership",
+                "dataset": self.dataset,
+                "source_dataset": self.source_dataset,
+                "private_metadata": metadata,
+                "owner_id": self.owner_id
+            }
+        if self._id:
+            doc["_id"] = self._id
+        if self._rev:
+            doc["_rev"] = self._rev
+
+        if use_json:
+            return json.dumps(doc)
+        else:
+            return doc
+    def make_id(self):
+        self._id = uuid.uuid4()
+        return self._id
+
+def get_meta(doc):
+    """Load the documunt metadata field wether it is private or not"""
+    meta = doc.get("metadata")
+    if meta is None:
+        meta = doc.get("private_metadata")
+
+    # if meta is still None the type field is not set.
+    if meta is None:
+        raise star_exceptions.TypeMissingError()
+    else:
+        return meta
+
 def load_doc(client, doc):
+    """Load a document. it will determin the type then load it."""
+    obj = None
     if doc is not None:
         type = doc.get("type")
         if type is None:
-            pass
+            raise star_exceptions.TypeMissingError()
+        else:
+            if type == "person":
+                obj = BookerPerson().load(doc)
+            elif type == "org":
+                obj = BookerOganizations().load(doc)
+            elif type == "email":
+                obj = BookerEmail().load(doc)
+            elif type == "address":
+                obj = BookerAddress().load(doc)
+        if obj is None:
+            raise star_exceptions.DocumentParseError("Failed to load document becuase a type could not be matched")
+        else:
+            return obj
