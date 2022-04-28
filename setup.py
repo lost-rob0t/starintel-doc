@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="starintel_doc",
-    version="0.4.6",
+    version="0.4.7",
     description="Document Spec for Star intel",
     long_description=open("README.org", "r").read(),
     long_description_content_type="text/org",

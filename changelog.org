@@ -1,4 +1,10 @@
 * Unreleased
+** [2022-04-28 Thu 13:35] 0.4.7 added fields
+*** BookerPerson
+Added gender, political_party
+
+*** BookerPhone:
+added phone_type
 ** [2022-04-28 Thu 03:11] Moved code to src
 
 [[file:~/Documents/Projects/starintel_doc/setup.py::version="0.4.1",]]
