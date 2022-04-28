@@ -1,4 +1,7 @@
 * Unreleased
+** [2022-04-28 Thu 15:31] 0.4.8 added make_id
+BookerDocument has recieved a new method to generate document ids.
+Still it wont help you incase of a document conflict
 ** [2022-04-28 Thu 13:35] 0.4.7 added fields
 *** BookerPerson
 Added gender, political_party

@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="starintel_doc",
-    version="0.4.7",
+    version="0.4.8",
     description="Document Spec for Star intel",
     long_description=open("readme_pypi.md", "r").read(),
     long_description_content_type="text/markdown",
