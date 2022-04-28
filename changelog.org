@@ -1,0 +1,5 @@
+* Unreleased
+** [2022-04-28 Thu 02:43] 0.4.0
+Deprecated BookerMember. When using BookerPerson be sure to use BookerMembership
+BookerMembership holds metadata related to a membership.
+[[file:~/Documents/Projects/starintel_doc/src/starintel_doc.py::class BookerPerson(BookerDocument):]]
