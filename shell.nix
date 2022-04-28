@@ -13,6 +13,7 @@ stdenv.mkDerivation {
     pipenv
     stdenv
     libffi
+    curl
     ispell
     zlib ];
   src = null;
