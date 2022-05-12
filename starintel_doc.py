@@ -664,7 +664,7 @@ class BookerMesaage(BookerDocument):
     username: str = field(kw_only=True)
     fname: str = field(kw_only=True, default="")
     lname: str = field(kw_only=True, default="")
-    phone: str = field(kw_only=True)  # Used for signal and telegram
+    phone: str = field(kw_only=True, default="")  # Used for signal and telegram
     user_id: str = field(
         kw_only=True, default=""
     )  # Hash the userid of the platform to keep it uniform
@@ -672,24 +672,22 @@ class BookerMesaage(BookerDocument):
     # Using this system we can track message replys across platforms amd keeps it easy
     message_id: str = field(kw_only=True)
     group_name: str = field(kw_only=True)  # Server name if discord
-    channel_name: str = field(kw_only=True)  # only used incase like discord
+    channel_name: str = field(kw_only=True, default="")  # only used incase like discord
     message: str = field(kw_only=True)
     message_type: str = field(kw_only=True)  # type of message
-    is_reply: bool = field(kw_only=True)
+    is_reply: bool = field(kw_only=True, default=False)
     reply_id: str = field(kw_only=True, default="")
 
     def make_doc(self, use_json=False):
         """Build a document. To generate a json document set `use_json` to `True`"""
         metadata = {
             "platform": self.platform,
-            "date": self.date,
             "is_reply": self.is_reply,
             "username": self.username,
             "message": self.message,
             "message_type": self.message_type,
             "user_id": self.user_id,
             "message_id": self.message_id,
-            "date": self.date_added,
             "is_media": self.media,
             "fname": self.fname,
             "lname": self.lname,
@@ -843,7 +841,7 @@ class BookerUsername(BookerDocument):
     owner: str = field(kw_only=True, default="")
     email: str = field(kw_only=True, default="")
     phone: str = field(kw_only=True, default="")
-    orgs: list[str] = field(kw_only=True, default_factory=list)
+    memberships: list[str] = field(kw_only=True, default_factory=list)
     type = "username"
 
     def make_doc(self, use_json=False):
@@ -854,7 +852,7 @@ class BookerUsername(BookerDocument):
             "owner": self.owner,
             "email": self.email,
             "phone": self.phone,
-            "membership": self.org,
+            "memberships": self.memberships,
         }
         if self.is_public:
             doc = {
@@ -966,71 +964,6 @@ class BookerPhone(BookerDocument):
         except KeyError:
             raise star_exceptions.DocumentParseError()
 
-
-@dataclass
-class BookerPhone(BookerDocument):
-    """Class for phone numbers."""
-    owner:  str = field(kw_only=True, default="")
-    phone: str = field(kw_only=True, default="")
-    carrier: str = field(kw_only=True, default="")
-    status: str = field(kw_only=True, default="")
-    phone_type: str = field(kw_only=True, default="")
-    type = "phone"
-    def make_doc(self, use_json=False):
-        """Build a document. To generate a json document set `use_json` to `True`"""
-        metadata = {
-            "owner": self.owner,
-            "phone": self.phone,
-            "carrier": self.carrier,
-            "phone_type": self.phone_type
-        }
-        if self.is_public:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "phone",
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        else:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "username",
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "private_metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        if self._id:
-            doc["_id"] = self._id
-        if self._rev:
-            doc["_rev"] = self._rev
-
-        if use_json:
-            return json.dumps(doc)
-        else:
-            return doc
-
-
-    def load(self, doc):
-        """Load a document from json."""
-        meta = get_meta(doc)
-        self._id = doc.get("_id")
-        self._rev = doc.get("_rev")
-        self.date_added = doc.get("date_added")
-        self.date_updated = doc.get("date_updated")
-        self.source_dataset = doc.get("source_dataset")
-        self.dataset = doc.get("dataset")
-        self.owner_id = doc.get("owner_id")
-
-        try:
-            self.phone = meta.get("phone")
-            self.carrier = meta.get("carrier")
-            self.owner = meta.get("owner")
-            self.phone_type = meta.get("phone_type")
-        except KeyError:
-            raise star_exceptions.ParseDocumentError()
 
 @dataclass
 class BookerMembership(BookerDocument):

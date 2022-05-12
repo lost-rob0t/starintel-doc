@@ -1,4 +1,7 @@
 * Unreleased
+** [2022-05-12 Thu 01:44] 0.5.4
+Fixed memberships and removed "orgs" from BookerMessage.
+Phone is no longer required.
 ** [2022-05-03 Tue 04:52] Fixed BookerPhone having type "username"
 
 [[file:~/Documents/Projects/starintel-doc/setup.py::version="0.5.0",]]
