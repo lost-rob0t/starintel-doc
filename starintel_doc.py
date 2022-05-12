@@ -1040,7 +1040,7 @@ class BookerMembership(BookerDocument):
     type = "membership"
     start_date:  str = field(kw_only=True, default="")
     end_date:  str = field(kw_only=True, default="")
-    roles: list = field(kw_only=True, default_factory=list())
+    roles: list[str] = field(kw_only=True, default_factory=list())
     title:  str = field(kw_only=True, default="")
 
     def load(self, doc):
