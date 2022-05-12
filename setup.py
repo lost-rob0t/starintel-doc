@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="starintel_doc",
-    version="0.5.1",
+    version="0.5.2",
     description="Document Spec for Star intel",
     long_description_content_type="text/markdown",
     url="https://gitlab.com/unseen-giants/starintel_doc",
