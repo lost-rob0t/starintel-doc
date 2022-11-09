@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 couchdb2 = "*"
+certifi = "*"
 
 [dev-packages]
 python-language-server = {extras = ["all"], version = "*"}
