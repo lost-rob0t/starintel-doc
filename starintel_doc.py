@@ -6,7 +6,7 @@ from hashlib import sha256
 from datetime import datetime
 import couchdb2
 import star_exceptions
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 
 def make_id(json: str) -> str:
@@ -39,7 +39,7 @@ class BookerDocument:
         return json.dumps(self.__dict__)
 
 @dataclass
-class BookerEntity:
+class BookerEntity(BookerDocument):
     etype: str = field(kw_only=True, default="")
     eid: str = field(kw_only=True, default="")
 
@@ -52,7 +52,7 @@ class BookerEntity:
 
 
 @dataclass
-class BookerPerson(BookerDocument):
+class BookerPerson(BookerEntity):
     """Person class.
        WARNING: When creating a person document, make sure to only place document id
        if you do not the resolve method will be useless and whats the point of metadata?""
@@ -66,16 +66,15 @@ class BookerPerson(BookerDocument):
     age: int = field(default=0, kw_only=True)
     dob: str = field(default="", kw_only=True)
     social_media: list[str] = field(default_factory=list, kw_only=True)
-    phones: list[str] = field(default_factory=list, kw_only=True)
-    address: list[str] = field(default_factory=list, kw_only=True)
+    phones: list[dict] = field(default_factory=list, kw_only=True)
+    address: list[dict] = field(default_factory=list, kw_only=True)
     ip: list[str] = field(default_factory=list, kw_only=True)
-    data_breach: list[str] = field(default_factory=list, kw_only=True)
-    emails: list[str] = field(default_factory=list, kw_only=True)
-    organizations: list[str] = field(default_factory=list, kw_only=True)
-    memberships: list[str] = field(default_factory=list, kw_only=True)
+    emails: list[dict] = field(default_factory=list, kw_only=True)
+    orgs: list[str] = field(default_factory=list, kw_only=True)
+    memberships: list[dict] = field(default_factory=list, kw_only=True)
     education: list[dict] = field(default_factory=list, kw_only=True)
-    comments: list[dict] = field(default_factory=list, kw_only=True)
-    type = "person"
+    interests: list[dict] = field(default_factory=list, kw_only=True)
+    dtype = "person"
 
     def resolve(self, client):
         """For each remote document load and build a BookerDocument.
@@ -100,72 +99,33 @@ class BookerPerson(BookerDocument):
         for doc_ in docs:
             if doc_ is not None:
                 try:
-                    dtype = doc_['type']
-                    if dtype == "email":
+                    type = doc_['dtype']
+                    if type == "email":
                         resolved_emails.append(BookerEmail().load(doc_))
-                    elif dtype == "org":
+                    elif type == "org":
                         resolved_orgs.append(BookerOganizations().load(doc_))
-                    elif dtype == "phone":
+                    elif type == "phone":
                         resolved_phones.append(BookerPhone().load(doc_))
-                    elif dtype == "username":
+                    elif type == "username":
                         resolved_social_media.append(BookerUsername().load(doc_))
-                    elif dtype == "membership":
+                    elif type == "membership":
                         resolved_memberships.append(BookerMembership().load(doc_))
                 except KeyError:
                     raise star_exceptions.TypeMissingError()
 
 @dataclass
-class BookerOganizations(BookerDocument):
+class BookerOrg(BookerDocument):
     """Organization class. You should use this for NGO, governmental agencies and corpations."""
 
     name: str = field(kw_only=True, default="")
 
     country: str = field(default="")
     bio: str = field(default="")
-    organization_type: str = field(kw_only=True, default="NGO")
+    orgtype: str = field(kw_only=True, default="NGO")
     reg_number: str = field(kw_only=True, default="")
     members: list[dict] = field(default_factory=list)
     address: list[dict] = field(default_factory=list)
-    email_formats: list[str] = field(default_factory=list)
-    type = "org"
-
-    def make_doc(self, use_json=False):
-        """Build a document. To generate a json document set `use_json` to `True`"""
-        metadata = {
-            "name": self.name,
-            "country": self.country,
-            "members": self.members,
-            "address": self.address,
-            "reg_number": self.reg_number,
-            "org_type": self.organization_type,
-            "email_formats": self.email_formats,
-        }
-        if self.is_public:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "org",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        else:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "org",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "private_metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        if use_json:
-            return json.dumps(doc)
-        else:
-            return doc
+    dtype = "org"
 
 @dataclass
 class BookerEmail(BookerDocument):
@@ -175,48 +135,7 @@ class BookerEmail(BookerDocument):
     email_domain: str = field(kw_only=True, default="")
     email_password: str = field(kw_only=True, default="")
     data_breach: list[str] = field(default_factory=list, kw_only=True)
-    username: dict = field(kw_only=True, default_factory=dict)
-    type = "email"
-
-    def make_doc(self, use_json=False):
-        """Build a document. To generate a json document set `use_json` to `True`"""
-        metadata = {
-            "owner": self.owner,
-            "email_username": self.email_username,
-            "username": self.username,
-            "email_domain": self.email_domain
-        }
-        if self.is_public:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "email",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        else:
-            doc = {
-                "operation_id": self.operation_id,
-                "type": "email",
-                "date_added": self.date_added,
-                "date_updated": self.date_updated,
-                "dataset": self.dataset,
-                "source_dataset": self.source_dataset,
-                "private_metadata": metadata,
-                "owner_id": self.owner_id
-            }
-        if self._id:
-            doc["_id"] = self._id
-        if self._rev:
-            doc["_rev"] = self._rev
-
-        if use_json:
-            return json.dumps(doc)
-        else:
-            return doc
+    dtype = "email"
 
 @dataclass
 class BookerBreach(BookerDocument):
@@ -224,7 +143,7 @@ class BookerBreach(BookerDocument):
     total: int
     description: str
     url: str
-    type = "breach"
+    dtype = "breach"
 @dataclass
 class BookerWebService(BookerDocument):
     port: int
@@ -233,7 +152,7 @@ class BookerWebService(BookerDocument):
     source: str
     ip: str
     owner: str
-    type = "service"
+    dtype = "service"
 
 @dataclass
 class BookerHost(BookerDocument):
@@ -247,13 +166,13 @@ class BookerHost(BookerDocument):
     owner: str = field(kw_only=True, default="")
     vulns: list[dict] = field(default_factory=list)
     services: list[dict] = field(default_factory=list)
-    type = "host"
+    dtype = "host"
 
 @dataclass
 class BookerCVE(BookerDocument):
     cve_number: str
     score: int
-    type = "cve"
+    dtype = "cve"
 @dataclass
 class BookerMesaage(BookerDocument):
     """Class For a instant message. This is best suited for Discord/telegram like chat services."""
@@ -275,22 +194,17 @@ class BookerMesaage(BookerDocument):
     message_type: str = field(kw_only=True)  # type of message
     is_reply: bool = field(kw_only=True, default=False)
     reply_id: str = field(kw_only=True, default="")
-
-    def make_id(self):
-        hinput = self.message + self.channel_name + self.group_name + self.date_added + self.username
-        self._id = make_id(hinput)
-        return self._id
-
+    dtype = "message"
 @dataclass
 class BookerAddress(BookerDocument):
     """Class for an Adress. Currently only for US addresses but may work with others."""
     street: str = field(kw_only=True, default="")
     city: str = field(kw_only=True, default="")
     state: str = field(kw_only=True, default="")
-    apt: str = field(kw_only=True, default="")
-    zip: str = field(kw_only=True, default="")
+    street2: str = field(kw_only=True, default="")
+    postal: str = field(kw_only=True, default="")
     members: list = field(kw_only=True, default_factory=list)
-    type = "address"
+    dtype = "address"
 
 @dataclass
 class BookerUsername(BookerDocument):
@@ -301,7 +215,7 @@ class BookerUsername(BookerDocument):
     email: str = field(kw_only=True, default="")
     phone: str = field(kw_only=True, default="")
     memberships: list[str] = field(kw_only=True, default_factory=list)
-    type = "username"
+    dtype = "username"
 
 @dataclass
 class BookerPhone(BookerDocument):
@@ -311,7 +225,7 @@ class BookerPhone(BookerDocument):
     carrier: str = field(kw_only=True, default="")
     status: str = field(kw_only=True, default="")
     phone_type: str = field(kw_only=True, default="")
-
+    dtype = "phone"
 
 @dataclass
 class BookerMembership(BookerDocument):
