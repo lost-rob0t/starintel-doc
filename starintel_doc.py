@@ -192,6 +192,12 @@ class BookerSocialMPost(BookerDocument):
     group: str = field(kw_only=True)
 
 @dataclass
+class BookerRelation(BookerDocument):
+    relation: str = field(kw_only=True)
+    source: str = field(kw_only=True)
+    target: str = field(kw_only=True)
+
+@dataclass
 class BookerTarget:
     """Automation object, holds configution for actors (bots) to preform tasks"""
     _id: str field(kw_only=True, default = "")
@@ -199,3 +205,10 @@ class BookerTarget:
     target: str field(kw_only=True, default = "")
     dataset: str field(kw_only=True, default = "")
     options: dict field(kw_only=True, default_factory = dict)
+
+    @property
+    def __dict__(self):
+        return asdict(self)
+    @property
+    def json(self):
+        return json.dumps(self.__dict__)
