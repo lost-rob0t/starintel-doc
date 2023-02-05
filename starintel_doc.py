@@ -200,11 +200,11 @@ class BookerRelation(BookerDocument):
 @dataclass
 class BookerTarget:
     """Automation object, holds configution for actors (bots) to preform tasks"""
-    _id: str field(kw_only=True, default = "")
-    actor: str field(kw_only=True, default = "")
-    target: str field(kw_only=True, default = "")
-    dataset: str field(kw_only=True, default = "")
-    options: dict field(kw_only=True, default_factory = dict)
+    _id: str = field(kw_only=True, default = "")
+    actor: str = field(kw_only=True, default = "")
+    target: str = field(kw_only=True, default = "")
+    dataset: str = field(kw_only=True, default = "")
+    options: dict = field(kw_only=True, default_factory = dict)
 
     @property
     def __dict__(self):
