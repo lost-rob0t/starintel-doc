@@ -7,7 +7,6 @@ from datetime import datetime
 import couchdb2
 import time
 import star_exceptions
-__version__ = "0.6.0"
 
 
 def make_id(json: str) -> str:
@@ -60,7 +59,7 @@ class BookerPerson(BookerEntity):
     dob: str = field(default="", kw_only=True)
     social_media: list[dict] = field(default_factory=list, kw_only=True)
     phones: list[dict] = field(default_factory=list, kw_only=True)
-    address: list[dict] = field(default_factory=dict, kw_only=True)
+    address: list[dict] = field(default_factory=list, kw_only=True)
     emails: list[dict] = field(default_factory=list, kw_only=True)
     orgs: list[dict] = field(default_factory=list, kw_only=True)
     dtype = "person"
@@ -71,7 +70,7 @@ class BookerOrg(BookerDocument):
     """Organization class. You should use this for NGO, governmental agencies and corpations."""
 
     name: str = field(kw_only=True, default="")
-
+    website: str = field(kw_only=True, default = "")
     country: str = field(default="")
     bio: str = field(default="")
     orgtype: str = field(kw_only=True, default="NGO")
@@ -88,37 +87,6 @@ class BookerEmail(BookerDocument):
     email_password: str = field(kw_only=True, default="")
     data_breach: list[str] = field(default_factory=list, kw_only=True)
     dtype = "email"
-
-@dataclass
-class BookerBreach(BookerDocument):
-    date: str
-    total: int
-    description: str
-    url: str
-    dtype = "breach"
-@dataclass
-class BookerWebService(BookerDocument):
-    port: int
-    service_name: str
-    service_version: str
-    source: str
-    ip: str
-    owner: str
-    dtype = "service"
-
-@dataclass
-class BookerHost(BookerDocument):
-    ip: str
-    hostname: str
-    operating_system: str
-    date: str
-    asn: int = field(kw_only=True, default=0)
-    country: str = field(kw_only=True, default="")
-    network_name: str = field(kw_only=True, default="")
-    owner: str = field(kw_only=True, default="")
-    vulns: list[dict] = field(default_factory=list)
-    services: list[dict] = field(default_factory=list)
-    dtype = "host"
 
 @dataclass
 class BookerCVE(BookerDocument):
@@ -212,3 +180,62 @@ class BookerTarget:
     @property
     def json(self):
         return json.dumps(self.__dict__)
+
+
+@dataclass
+class BookerWeb(BookerDocument):
+    source: str = field(kw_only=True, default = "")
+
+@dataclass
+class BookerDomain(BookerWeb):
+    recordType: str = field(kw_only=True, default= "")
+    domain: str = field(kw_only=True)
+    ip: str = field(kw_only=True)
+
+
+@dataclass
+class BookerPort:
+    port: int = field(kw_only=True)
+    services: list[str] = field(kw_only=True, default_factory=list)
+    @property
+    def __dict__(self):
+        return asdict(self)
+    @property
+    def json(self):
+        return json.dumps(self.__dict__)
+
+
+@dataclass
+class BookerASN:
+    asn: int = field(kw_only=True)
+    subnet: str = field(kw_only=True)
+    @property
+    def __dict__(self):
+        return asdict(self)
+    @property
+    def json(self):
+        return json.dumps(self.__dict__)
+
+@dataclass
+class BookerNetwork:
+    org: dict = field(kw_only=True, default_factory=dict)
+    asn: dict = field(kw_only=True, default_factory=dict)
+    @property
+    def __dict__(self):
+        return asdict(self)
+    @property
+    def json(self):
+        return json.dumps(self.__dict__)
+
+@dataclass
+class BookerHost(BookerWeb):
+    hostname: str = field(kw_only=True)
+    ip: str = field(kw_only=True)
+    os: str = field(kw_only=True)
+    ports: list[dict] = field(kw_only=True, default_factory=list)
+    network: dict = field(kw_only=True, default_factory=dict)
+
+@dataclass
+class BookerUrl(BookerWeb):
+    url: str = field(kw_only=True)
+    content: str = field(kw_only=True)
