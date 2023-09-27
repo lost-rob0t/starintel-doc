@@ -4,8 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-couchdb2 = "*"
 certifi = "*"
+six = "*"
+ulid-py = "*"
 
 [dev-packages]
 python-language-server = {extras = ["all"], version = "*"}
@@ -14,6 +15,7 @@ pre-commit = "*"
 twine = "*"
 pdoc = "*"
 ipython = "*"
+six = "*"
 
 [requires]
 python_version = "3.10"
