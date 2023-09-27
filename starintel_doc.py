@@ -1,12 +1,7 @@
 import json
-import random
-import uuid
 from dataclasses import dataclass, field, asdict
 from hashlib import sha256
-from datetime import datetime
-import couchdb2
 import time
-import star_exceptions
 
 
 def make_id(json: str) -> str:
@@ -14,13 +9,13 @@ def make_id(json: str) -> str:
 
 
 @dataclass
-class BookerDocument:
+class Document:
     """Meta Class for documents to be stored in starintel.
     If the Document is labeled private then
     the meta data will be labeled private and will
     not be gloably searched."""
 
-    _id: str = field(kw_only=True, default=None)
+    id: str = field(kw_only=True, default=None)
     dtype: str = field(kw_only=True, default="")
     dataset: str = field(default="Star Intel", kw_only=True)
     date_added: int = field(default=int(time.time()), kw_only=True)
@@ -34,7 +29,7 @@ class BookerDocument:
         return json.dumps(self.__dict__)
 
 @dataclass
-class BookerEntity(BookerDocument):
+class Entity(Document):
     etype: str = field(kw_only=True, default="")
     eid: str = field(kw_only=True, default="")
 
@@ -47,7 +42,7 @@ class BookerEntity(BookerDocument):
 
 
 @dataclass
-class BookerPerson(BookerEntity):
+class Person(Entity):
     """
     Person class.
     """
@@ -66,7 +61,7 @@ class BookerPerson(BookerEntity):
     misc: list[str] = field(default_factory=list, kw_only=True)
 
 @dataclass
-class BookerOrg(BookerDocument):
+class Org(Document):
     """Organization class. You should use this for NGO, governmental agencies and corpations."""
 
     name: str = field(kw_only=True, default="")
@@ -80,7 +75,7 @@ class BookerOrg(BookerDocument):
     dtype = "org"
 
 @dataclass
-class BookerEmail(BookerDocument):
+class Email(Document):
     """Email class. This class also serves as a psuedo email:pass combo"""
     email_username: str = field(kw_only=True, default="")
     email_domain: str = field(kw_only=True, default="")
@@ -89,12 +84,12 @@ class BookerEmail(BookerDocument):
     dtype = "email"
 
 @dataclass
-class BookerCVE(BookerDocument):
+class CVE(Document):
     cve_number: str
     score: int
     dtype = "cve"
 @dataclass
-class BookerMesaage(BookerDocument):
+class Mesaage(Document):
     """Class For a instant message. This is best suited for Discord/telegram like chat services."""
     platform: str  # Domain of platform aka telegram.org. discord.gg
     media: list[str] = field(kw_only=True, default_factory=list)
@@ -110,13 +105,13 @@ class BookerMesaage(BookerDocument):
     dtype = "message"
 
 @dataclass
-class BookerGeo:
+class Geo:
     lat: float = field(kw_only=True, default=0.0)
     long: float = field(kw_only=True, default=0.0)
     gid: str = field(kw_only=True, default="")
 
 @dataclass
-class BookerAddress(BookerGeo):
+class Address(Geo):
     """Class for an Adress. Currently only for US addresses but may work with others."""
     street: str = field(kw_only=True, default="")
     city: str = field(kw_only=True, default="")
@@ -127,7 +122,7 @@ class BookerAddress(BookerGeo):
     dtype = "address"
 
 @dataclass
-class BookerUsername(BookerDocument):
+class Username(Document):
     """Class for Online username. has no specifics use to represent a online prescense."""
     username: str
     platform: str
@@ -137,7 +132,7 @@ class BookerUsername(BookerDocument):
     dtype = "username"
 
 @dataclass
-class BookerPhone(BookerDocument):
+class Phone(Document):
     """Class for phone numbers."""
     phone: str = field(kw_only=True, default="")
     carrier: str = field(kw_only=True, default="")
@@ -146,7 +141,7 @@ class BookerPhone(BookerDocument):
     dtype = "phone"
 
 @dataclass
-class BookerSocialMPost(BookerDocument):
+class SocialMPost(Document):
     """class for Social media posts from places such as reddit or mastodon/twitter"""
     content: str = field(kw_only=True)
     url: str = field(kw_only=True)
@@ -160,13 +155,13 @@ class BookerSocialMPost(BookerDocument):
     group: str = field(kw_only=True)
 
 @dataclass
-class BookerRelation(BookerDocument):
+class Relation(Document):
     relation: str = field(kw_only=True)
     source: str = field(kw_only=True)
     target: str = field(kw_only=True)
 
 @dataclass
-class BookerTarget:
+class Target:
     """Automation object, holds configution for actors (bots) to preform tasks"""
     _id: str = field(kw_only=True, default = "")
     actor: str = field(kw_only=True, default = "")
@@ -183,18 +178,18 @@ class BookerTarget:
 
 
 @dataclass
-class BookerWeb(BookerDocument):
+class Web(Document):
     source: str = field(kw_only=True, default = "")
 
 @dataclass
-class BookerDomain(BookerWeb):
+class Domain(Web):
     recordType: str = field(kw_only=True, default= "")
     domain: str = field(kw_only=True)
     ip: str = field(kw_only=True)
 
 
 @dataclass
-class BookerPort:
+class Port:
     port: int = field(kw_only=True)
     services: list[str] = field(kw_only=True, default_factory=list)
     @property
@@ -206,7 +201,7 @@ class BookerPort:
 
 
 @dataclass
-class BookerASN:
+class ASN:
     asn: int = field(kw_only=True)
     subnet: str = field(kw_only=True)
     @property
@@ -217,7 +212,7 @@ class BookerASN:
         return json.dumps(self.__dict__)
 
 @dataclass
-class BookerNetwork:
+class Network:
     org: dict = field(kw_only=True, default_factory=dict)
     asn: dict = field(kw_only=True, default_factory=dict)
     @property
@@ -228,14 +223,14 @@ class BookerNetwork:
         return json.dumps(self.__dict__)
 
 @dataclass
-class BookerHost(BookerWeb):
-    hostname: str = field(kw_only=True)
+class Host(Web):
+    hostname: str = field(kw_only=True, default = "")
     ip: str = field(kw_only=True)
-    os: str = field(kw_only=True)
+    os: str = field(kw_only=True, default="")
     ports: list[dict] = field(kw_only=True, default_factory=list)
     network: dict = field(kw_only=True, default_factory=dict)
 
 @dataclass
-class BookerUrl(BookerWeb):
+class Url(Web):
     url: str = field(kw_only=True)
     content: str = field(kw_only=True)
