@@ -7,15 +7,14 @@ import time
 def make_id(json: str) -> str:
     return sha256(bytes(json, encoding="utf-8")).hexdigest()
 
-
 @dataclass
-class Document:
+class Document():
     """Meta Class for documents to be stored in starintel.
     If the Document is labeled private then
     the meta data will be labeled private and will
     not be gloably searched."""
 
-    id: str = field(kw_only=True, default=None)
+    id: str = field(kw_only=True, default="")
     dtype: str = field(kw_only=True, default="")
     dataset: str = field(default="Star Intel", kw_only=True)
     date_added: int = field(default=int(time.time()), kw_only=True)
@@ -23,22 +22,23 @@ class Document:
 
     @property
     def __dict__(self):
-        return asdict(self)
+        data = asdict(self)
+        # For compat with nim
+        #
+        data["_id"] = data["id"]
+        data.pop("id")
+        return data
     @property
     def json(self):
         return json.dumps(self.__dict__)
+    def __post_init__(self):
+        # Set the type of object based on the class name
+        self.dtype = self.__class__.__name__
 
 @dataclass
 class Entity(Document):
     etype: str = field(kw_only=True, default="")
     eid: str = field(kw_only=True, default="")
-
-    @property
-    def __dict__(self):
-        return asdict(self)
-    @property
-    def json(self):
-        return json.dumps(self.__dict__)
 
 
 @dataclass
@@ -57,7 +57,6 @@ class Person(Entity):
     address: list[dict] = field(default_factory=list, kw_only=True)
     emails: list[dict] = field(default_factory=list, kw_only=True)
     orgs: list[dict] = field(default_factory=list, kw_only=True)
-    dtype = "person"
     misc: list[str] = field(default_factory=list, kw_only=True)
 
 @dataclass
@@ -72,29 +71,27 @@ class Org(Document):
     reg: str = field(kw_only=True, default="")
     members: list[dict] = field(default_factory=list)
     address: list[dict] = field(default_factory=list)
-    dtype = "org"
 
 @dataclass
 class Email(Document):
     """Email class. This class also serves as a psuedo email:pass combo"""
-    email_username: str = field(kw_only=True, default="")
-    email_domain: str = field(kw_only=True, default="")
-    email_password: str = field(kw_only=True, default="")
+    user: str = field(kw_only=True, default="")
+    domain: str = field(kw_only=True, default="")
+    password: str = field(kw_only=True, default="")
     data_breach: list[str] = field(default_factory=list, kw_only=True)
-    dtype = "email"
 
 @dataclass
 class CVE(Document):
     cve_number: str
     score: int
-    dtype = "cve"
+
 @dataclass
 class Mesaage(Document):
     """Class For a instant message. This is best suited for Discord/telegram like chat services."""
     platform: str  # Domain of platform aka telegram.org. discord.gg
     media: list[str] = field(kw_only=True, default_factory=list)
-    username: str = field(kw_only=True)
-    # Should be a hash of groupname, message, date and username.
+    user: str = field(kw_only=True)
+    # Should be a hash of groupname, message, date and user.
     # Using this system we can track message replys across platforms amd keeps it easy
     message_id: str = field(kw_only=True)
     group: str = field(kw_only=True)  # Server name if discord
@@ -102,7 +99,6 @@ class Mesaage(Document):
     message: str = field(kw_only=True)
     isReply: bool = field(kw_only=True, default=False)
     replyTo: dict = field(kw_only=True, default_factory=dict)
-    dtype = "message"
 
 @dataclass
 class Geo:
@@ -119,26 +115,23 @@ class Address(Geo):
     street2: str = field(kw_only=True, default="")
     postal: str = field(kw_only=True, default="")
     country: str = field(kw_only=True, default="")
-    dtype = "address"
 
 @dataclass
-class Username(Document):
-    """Class for Online username. has no specifics use to represent a online prescense."""
-    username: str
+class User(Document):
+    """Class for Online user. has no specifics use to represent a online prescense."""
+    name: str
     platform: str
     email: list[str] = field(kw_only=True, default_factory=list)
     phones: list[str] = field(kw_only=True, default_factory=list)
     misc: list[dict] = field(kw_only=True, default_factory=list)
-    dtype = "username"
 
 @dataclass
 class Phone(Document):
     """Class for phone numbers."""
-    phone: str = field(kw_only=True, default="")
+    number: str = field(kw_only=True, default="")
     carrier: str = field(kw_only=True, default="")
     status: str = field(kw_only=True, default="")
     phone_type: str = field(kw_only=True, default="")
-    dtype = "phone"
 
 @dataclass
 class SocialMPost(Document):
@@ -159,11 +152,14 @@ class Relation(Document):
     relation: str = field(kw_only=True)
     source: str = field(kw_only=True)
     target: str = field(kw_only=True)
+    notes: str = field(kw_only=True)
+
+
 
 @dataclass
 class Target:
     """Automation object, holds configution for actors (bots) to preform tasks"""
-    _id: str = field(kw_only=True, default = "")
+    id: str = field(kw_only=True, default = "")
     actor: str = field(kw_only=True, default = "")
     target: str = field(kw_only=True, default = "")
     dataset: str = field(kw_only=True, default = "")
@@ -171,10 +167,18 @@ class Target:
 
     @property
     def __dict__(self):
-        return asdict(self)
+        data = asdict(self)
+        # For compat with nim
+        #
+        data["_id"] = data["id"]
+        data.pop("id")
+        return data
     @property
     def json(self):
         return json.dumps(self.__dict__)
+    def __post_init__(self):
+        # Set the type of object based on the class name
+        self.dtype = self.__class__.__name__
 
 
 @dataclass
@@ -184,13 +188,13 @@ class Web(Document):
 @dataclass
 class Domain(Web):
     recordType: str = field(kw_only=True, default= "")
-    domain: str = field(kw_only=True)
+    record: str = field(kw_only=True)
     ip: str = field(kw_only=True)
 
 
 @dataclass
 class Port:
-    port: int = field(kw_only=True)
+    number: int = field(kw_only=True)
     services: list[str] = field(kw_only=True, default_factory=list)
     @property
     def __dict__(self):
@@ -202,7 +206,7 @@ class Port:
 
 @dataclass
 class ASN:
-    asn: int = field(kw_only=True)
+    number: int = field(kw_only=True)
     subnet: str = field(kw_only=True)
     @property
     def __dict__(self):
