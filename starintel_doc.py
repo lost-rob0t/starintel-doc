@@ -9,10 +9,7 @@ def make_id(json: str) -> str:
 
 @dataclass
 class Document():
-    """Meta Class for documents to be stored in starintel.
-    If the Document is labeled private then
-    the meta data will be labeled private and will
-    not be gloably searched."""
+    """Meta Class for documents to be stored in starintel."""
 
     id: str = field(kw_only=True, default="")
     dtype: str = field(kw_only=True, default="")
@@ -24,6 +21,7 @@ class Document():
     def __dict__(self):
         data = asdict(self)
         # For compat with nim
+        # Assuming couchdb or other databases that use _id as the id
         data["_id"] = data.pop("id")
         return data
     @property
@@ -38,7 +36,6 @@ class Document():
         data = json.loads(json_str)
         if "_id" in data:
             data["id"] = data.pop("_id")
-
         return cls(**data)
 
 @dataclass

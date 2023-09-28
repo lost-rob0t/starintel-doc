@@ -1,13 +1,1 @@
 * Inbox
-** TODO create resolve function for BookerAddress
-
-[[file:~/Documents/Projects/starintel_doc/starintel_doc.py::"""Class for an Adress. Currently only for US addresses but may work with others."""]]
-** TODO make resolve function for BookerEmail
-
-[[file:~/Documents/Projects/starintel_doc/starintel_doc.py::"""Email class. This class also serves as a psuedo email:pass combo"""]]
-** TODO create resolve function for BookerOrganizations
-
-[[file:~/Documents/Projects/starintel_doc/starintel_doc.py::address: list\[dict\] = field(default_factory=list)]]
-** TODO add documentation strings for classes
-
-[[file:~/Documents/Projects/starintel_doc/README.org::*Star Intel Document][Star Intel Document]]
