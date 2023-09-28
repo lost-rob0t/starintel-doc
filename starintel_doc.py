@@ -17,16 +17,14 @@ class Document():
     id: str = field(kw_only=True, default="")
     dtype: str = field(kw_only=True, default="")
     dataset: str = field(default="Star Intel", kw_only=True)
-    date_added: int = field(default=int(time.time()), kw_only=True)
-    date_updated: int = field(default=int(time.time()), kw_only=True)
+    dateAdded: int = field(default=int(time.time()), kw_only=True)
+    dateUpdated: int = field(default=int(time.time()), kw_only=True)
 
     @property
     def __dict__(self):
         data = asdict(self)
         # For compat with nim
-        #
-        data["_id"] = data["id"]
-        data.pop("id")
+        data["_id"] = data.pop("id")
         return data
     @property
     def json(self):
@@ -34,6 +32,14 @@ class Document():
     def __post_init__(self):
         # Set the type of object based on the class name
         self.dtype = self.__class__.__name__
+
+    @classmethod
+    def from_json(cls, json_str):
+        data = json.loads(json_str)
+        if "_id" in data:
+            data["id"] = data.pop("_id")
+
+        return cls(**data)
 
 @dataclass
 class Entity(Document):
@@ -52,7 +58,7 @@ class Person(Entity):
     gender: str = field(default="", kw_only=True)
     bio: str = field(default="", kw_only=True)
     dob: str = field(default="", kw_only=True)
-    social_media: list[dict] = field(default_factory=list, kw_only=True)
+    socialMedia: list[dict] = field(default_factory=list, kw_only=True)
     phones: list[dict] = field(default_factory=list, kw_only=True)
     address: list[dict] = field(default_factory=list, kw_only=True)
     emails: list[dict] = field(default_factory=list, kw_only=True)
@@ -78,11 +84,11 @@ class Email(Document):
     user: str = field(kw_only=True, default="")
     domain: str = field(kw_only=True, default="")
     password: str = field(kw_only=True, default="")
-    data_breach: list[str] = field(default_factory=list, kw_only=True)
+    dataBreach: list[str] = field(default_factory=list, kw_only=True)
 
 @dataclass
 class CVE(Document):
-    cve_number: str
+    cveNumber: str
     score: int
 
 @dataclass
@@ -93,9 +99,9 @@ class Mesaage(Document):
     user: str = field(kw_only=True)
     # Should be a hash of groupname, message, date and user.
     # Using this system we can track message replys across platforms amd keeps it easy
-    message_id: str = field(kw_only=True)
+    messageId: str = field(kw_only=True)
     group: str = field(kw_only=True)  # Server name if discord
-    channel_name: str = field(kw_only=True, default="")  # only used incase like discord
+    channelName: str = field(kw_only=True, default="")  # only used incase like discord
     message: str = field(kw_only=True)
     isReply: bool = field(kw_only=True, default=False)
     replyTo: dict = field(kw_only=True, default_factory=dict)
@@ -131,7 +137,7 @@ class Phone(Document):
     number: str = field(kw_only=True, default="")
     carrier: str = field(kw_only=True, default="")
     status: str = field(kw_only=True, default="")
-    phone_type: str = field(kw_only=True, default="")
+    phoneType: str = field(kw_only=True, default="")
 
 @dataclass
 class SocialMPost(Document):
