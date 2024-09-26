@@ -7,6 +7,7 @@ name = "pypi"
 certifi = "*"
 six = "*"
 ulid-py = "*"
+dataclasses-json = "*"
 
 [dev-packages]
 python-language-server = {extras = ["all"], version = "*"}

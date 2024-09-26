@@ -1,5 +1,21 @@
 [build-system]
-# These are the assumed default build requirements from pip:
-# https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
-requires = ["setuptools>=43.0.0", "wheel"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "starintel_doc"
+authors = [
+    {name = "nsaspy", email = "nsaspy@airmail.cc"},
+]
+description = "Starintel Documents"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Framework :: Starintel",
+    "Programming Language :: Python :: 3",
+]
+dependencies = [
+    "py-ulid",
+]
+dynamic = ["version"]
+

@@ -1,5 +1,5 @@
 #+TITLE: README
-
+#+OPTIONS: toc:nil
 * Star Intel Document Spec
 
 This python package defines python dataclasses so your project will be abled to create valid Starintel documents

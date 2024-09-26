@@ -15,7 +15,9 @@ stdenv.mkDerivation {
     libffi
     curl
     ispell
-    zlib ];
+    zlib
+    twine
+  ];
   src = null;
   shellHook = ''
     pipenv shell
