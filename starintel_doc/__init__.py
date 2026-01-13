@@ -8,3 +8,4 @@ from starintel_doc import hosts
 from starintel_doc import phones
 from starintel_doc import targets
 from starintel_doc import relations
+from starintel_doc import manifest

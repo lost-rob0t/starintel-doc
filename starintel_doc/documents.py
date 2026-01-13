@@ -6,7 +6,7 @@ from hashlib import md5
 import time
 import ulid
 
-STARINTEL_DOC_VERSION = "0.7.3"
+STARINTEL_DOC_VERSION = "0.8.0"
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)

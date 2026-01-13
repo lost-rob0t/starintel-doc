@@ -7,7 +7,8 @@ setup(
     description="Document Spec for Star intel",
     long_description_content_type="text/markdown",
     url="https://gitlab.com/unseen-giants/starintel_doc",
-    packages=find_packages("starintel_doc"),
+    packages=find_packages("./starintel_doc/"),
+    install_requires=["ulid-py"],
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
