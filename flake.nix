@@ -11,14 +11,14 @@
       pkgs = import nixpkgs { inherit system; };
 
       # Custom ulid-py dependency
-      ulid-py = pkgs.python3Packages.buildPythonPackage rec {
+      ulid-py = pkgs.python312Packages.buildPythonPackage rec {
         pname = "ulid-py";
         version = "1.1.0";
         format = "setuptools";
 
         src = pkgs.fetchPypi {
           inherit pname version;
-          hash = "sha256-VrgMZmztTrBDqF1fMKFLv6BTKs+YC4tDbuGlaT/SvWg=";
+          hash = "sha256-3GiEvpFVjfB3wwEbn7DIfRCXy4/GU0sR8xAWGv1XOPA=";
         };
 
         doCheck = false;
@@ -31,15 +31,16 @@
       };
 
       # Main starintel_doc package
-      starintel-doc = pkgs.python3Packages.buildPythonPackage rec {
+      starintel-doc = pkgs.python312Packages.buildPythonPackage rec {
         pname = "starintel_doc";
         version = "0.8.2";
         format = "setuptools";
 
         src = ./.;
 
-        propagatedBuildInputs = [
+        propagatedBuildInputs = with pkgs.python312Packages; [
           ulid-py
+          dataclasses-json
         ];
 
         doCheck = false;
@@ -60,18 +61,18 @@
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-          python3
-          python3Packages.pip
-          python3Packages.setuptools
-          python3Packages.wheel
+          python312
+          python312Packages.pip
+          python312Packages.setuptools
+          python312Packages.wheel
         ] ++ [
           ulid-py
         ];
 
         shellHook = ''
-          export PYTHONPATH="${starintel-doc}/${pkgs.python3.sitePackages}:$PYTHONPATH"
+          export PYTHONPATH="${starintel-doc}/${pkgs.python312.sitePackages}:$PYTHONPATH"
           echo "StarIntel Doc dev environment ready"
-          echo "Python: $(python3 --version)"
+          echo "Python: $(python --version)"
           echo "Package version: ${starintel-doc.version}"
         '';
       };
@@ -80,7 +81,7 @@
       apps.${system} = {
         default = {
           type = "app";
-          program = "${pkgs.python3.withPackages (ps: [ starintel-doc ])}/bin/python3";
+          program = "${pkgs.python312.withPackages (ps: [ starintel-doc ])}/bin/python";
         };
       };
     };

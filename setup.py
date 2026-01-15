@@ -7,8 +7,8 @@ setup(
     description="Document Spec for Star intel",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
-    packages=find_packages("./starintel_doc/"),
-    install_requires=["ulid-py"],
+    packages=find_packages(),
+    install_requires=["ulid-py", "dataclasses-json"],
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
