@@ -6,7 +6,7 @@ setup(
     version="0.8.2",
     description="Document Spec for Star intel",
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/unseen-giants/starintel_doc",
+    url="https://github.com/lost-rob0t/starintel-doc",
     packages=find_packages("./starintel_doc/"),
     install_requires=["ulid-py"],
     classifiers=[
