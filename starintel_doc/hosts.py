@@ -52,7 +52,8 @@ class Url(Document):
     url: str = field(kw_only=True)
     path: str = field(kw_only=True, default="")
     content: str = field(kw_only=True, default="")
-
+    query: str = field(kw_only=True, default="")
+    
     def set_id(self):
         self.hash_id(self.url, self.content)
 
