@@ -9,6 +9,7 @@ from starintel_doc.documents import Document
 class Relation(Document):
     source: str = field(kw_only=True, default="")
     target: str = field(kw_only=True, default="")
+    predicate: str = field(kw_only=True, default="")
     note: str = field(kw_only=True, default="")
 
     def set_id(self):
