@@ -24,7 +24,7 @@ class Document:
 
     @classmethod
     def ulid_id(self):
-        self.id = str(ulid.new())
+        self.id = str(ulid.ULID())
 
     @classmethod
     def timestamp(self):
