@@ -15,6 +15,7 @@ class Document:
     """Meta Class for documents to be stored in starintel."""
 
     id: str = field(kw_only=True, default="", metadata=config(field_name="_id"))
+    rev: str | None = field(kw_only=True, default=None, metadata=config(field_name="_rev"))
     dtype: str = field(kw_only=True, default="")
     sources: list[str] = field(default_factory=list, kw_only=True)
     version: str = field(kw_only=True, default=STARINTEL_DOC_VERSION)
@@ -58,3 +59,17 @@ class Document:
 
     def __post_init__(self):
         self.set_type()
+
+    def asdict(self):
+        """Convert document to dict, excluding _rev if it's None or empty."""
+        data = asdict(self)
+        if data.get('rev') is None or data.get('rev') == '':
+            data.pop('rev', None)
+        return data
+
+    def to_dict(self, *args, **kwargs):
+        """Override dataclass_json to_dict to exclude _rev if it's None or empty."""
+        data = super().to_dict(*args, **kwargs)
+        if data.get('_rev') is None or data.get('_rev') == '':
+            data.pop('_rev', None)
+        return data
