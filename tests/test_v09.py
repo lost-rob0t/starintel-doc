@@ -6,6 +6,7 @@ from starintel_doc.documents import STARINTEL_DOC_VERSION, Document
 from starintel_doc.entities import Org, Person
 from starintel_doc.relations import Relation
 from starintel_doc.schema_org import CANONICAL_DTYPES, DTYPE_SCHEMA_ORG_TYPES
+from starintel_doc.web import Domain, Email
 
 
 class StarIntelV09Tests(unittest.TestCase):
@@ -38,6 +39,14 @@ class StarIntelV09Tests(unittest.TestCase):
         self.assertEqual(person["schema_org"]["@type"], "Person")
         self.assertEqual(relation["schema_org"]["@type"], "Role")
         self.assertEqual(relation["data"]["predicate"], "worked_for")
+        self.assertEqual(relation["data"]["subject"], person["_id"])
+        self.assertEqual(relation["data"]["object"], "starintel:org:example")
+
+    def test_domain_and_email_required_fields(self) -> None:
+        domain = Domain(dataset="test", record_type="A", record="example.com").to_dict()
+        email = Email(dataset="test", user="ada", domain="example.com").to_dict()
+        self.assertEqual(domain["data"]["domain"], "example.com")
+        self.assertEqual(email["data"]["address"], "ada@example.com")
 
     def test_schema_org_map_covers_v09_dtype_set(self) -> None:
         self.assertEqual(set(CANONICAL_DTYPES), set(DTYPE_SCHEMA_ORG_TYPES))
