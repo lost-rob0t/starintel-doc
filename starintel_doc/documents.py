@@ -8,7 +8,7 @@ from hashlib import sha256
 from typing import Any
 
 import ulid
-from dataclasses_json import LetterCase, config, dataclass_json
+from dataclasses_json import config
 
 from starintel_doc.schema_org import canonical_dtype, schema_org_metadata, to_schema_org
 
@@ -31,7 +31,6 @@ def _source_values(values: list[Any]) -> list[dict[str, Any]]:
     return normalized
 
 
-@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Document:
     """Canonical StarIntel v0.9 document with legacy subclass compatibility."""
