@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
+import inspect
+from types import ModuleType
+
 from starintel_doc import documents
 from starintel_doc import entities
 from starintel_doc import locations
@@ -20,6 +25,42 @@ from starintel_doc.schema_org import (
     schema_org_types,
     to_schema_org,
 )
+
+
+def _document_classes(module: ModuleType):
+    for value in vars(module).values():
+        if not inspect.isclass(value):
+            continue
+        try:
+            if issubclass(value, Document):
+                yield value
+        except TypeError:
+            continue
+
+
+def _install_v09_serializers() -> None:
+    """Override legacy dataclasses-json serializers with the canonical v0.9 wire codec."""
+    modules = (
+        documents,
+        entities,
+        locations,
+        web,
+        social_media,
+        hosts,
+        phones,
+        targets,
+        relations,
+        manifest,
+    )
+    classes = {document_class for module in modules for document_class in _document_classes(module)}
+    for document_class in classes:
+        document_class.asdict = Document.asdict
+        document_class.to_dict = Document.to_dict
+        document_class.to_json = Document.to_json
+        document_class.to_schema_org = Document.to_schema_org
+
+
+_install_v09_serializers()
 
 __all__ = [
     "CANONICAL_DTYPES",
