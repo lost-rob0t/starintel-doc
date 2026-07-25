@@ -31,6 +31,27 @@ def _source_values(values: list[Any]) -> list[dict[str, Any]]:
     return normalized
 
 
+def _normalize_required_data(dtype: str, data: dict[str, Any]) -> dict[str, Any]:
+    value = dict(data)
+    if dtype == "relation":
+        value.setdefault("subject", value.get("source", ""))
+        value.setdefault("object", value.get("target", ""))
+    elif dtype == "domain":
+        value.setdefault("domain", value.get("record", ""))
+    elif dtype == "email":
+        user = str(value.get("user", ""))
+        domain = str(value.get("domain", ""))
+        value.setdefault("address", f"{user}@{domain}" if user and domain else "")
+    elif dtype == "email-message":
+        if "from_" in value and "from" not in value:
+            value["from"] = value.pop("from_")
+        if isinstance(value.get("to"), str):
+            value["to"] = [value["to"]] if value["to"] else []
+        if isinstance(value.get("headers"), str):
+            value["headers"] = {"raw": value["headers"]} if value["headers"] else {}
+    return value
+
+
 @dataclass
 class Document:
     """Canonical StarIntel v0.9 document with legacy subclass compatibility."""
@@ -152,6 +173,7 @@ class Document:
         }
         envelope = {name: raw.pop(name) for name in tuple(common_names)}
         subtype_data.update(raw)
+        subtype_data = _normalize_required_data(envelope["dtype"], subtype_data)
 
         value: dict[str, Any] = {
             "_id": document_id,
