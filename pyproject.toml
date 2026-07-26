@@ -1,21 +1,25 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
+requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "starintel_doc"
+version = "0.9.0"
 authors = [
     {name = "nsaspy", email = "nsaspy@airmail.cc"},
 ]
-description = "Starintel Documents"
+description = "StarIntel v0.9.0 document parser, validator, and serializer"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Framework :: Starintel",
     "Programming Language :: Python :: 3",
 ]
 dependencies = [
-    "py-ulid",
+    "dataclasses-json",
+    "jsonschema>=4.23,<5",
+    "ulid-py",
 ]
-dynamic = ["version"]
 
+[project.scripts]
+starintel-conformance = "starintel_doc.conformance_adapter:main"

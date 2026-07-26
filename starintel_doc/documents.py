@@ -6,22 +6,29 @@ from hashlib import md5
 import time
 import ulid
 
-STARINTEL_DOC_VERSION = "0.8.0"
+from starintel_doc.v090 import SPEC_VERSION
+
+STARINTEL_DOC_VERSION = SPEC_VERSION
+LEGACY_DOCUMENT_VERSION = "0.8.0"
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass
 class Document:
-    """Meta Class for documents to be stored in starintel."""
+    """Legacy flat 0.8 compatibility model.
+
+    New code must use ``starintel_doc.Document`` from the package root, which
+    implements the strict StarIntel v0.9.0 envelope.
+    """
 
     id: str = field(kw_only=True, default="", metadata=config(field_name="_id"))
     rev: str | None = field(kw_only=True, default=None, metadata=config(field_name="_rev"))
     dtype: str = field(kw_only=True, default="")
     sources: list[str] = field(default_factory=list, kw_only=True)
-    version: str = field(kw_only=True, default=STARINTEL_DOC_VERSION)
+    version: str = field(kw_only=True, default=LEGACY_DOCUMENT_VERSION)
     dataset: str = field(default="star-intel", kw_only=True)
-    date_added: int = field(default=int(time.time()), kw_only=True)
-    date_updated: int = field(default=int(time.time()), kw_only=True)
+    date_added: int = field(default_factory=lambda: int(time.time()), kw_only=True)
+    date_updated: int = field(default_factory=lambda: int(time.time()), kw_only=True)
 
     @classmethod
     def ulid_id(self):

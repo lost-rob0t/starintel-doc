@@ -1,14 +1,22 @@
-from setuptools import setup, find_packages
-
+from setuptools import find_packages, setup
 
 setup(
     name="starintel_doc",
-    version="0.8.2",
-    description="Document Spec for Star intel",
+    version="0.9.0",
+    description="StarIntel v0.9.0 document parser, validator, and serializer",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
     packages=find_packages(),
-    install_requires=["ulid-py", "dataclasses-json"],
+    install_requires=[
+        "ulid-py",
+        "dataclasses-json",
+        "jsonschema>=4.23,<5",
+    ],
+    entry_points={
+        "console_scripts": [
+            "starintel-conformance=starintel_doc.conformance_adapter:main",
+        ]
+    },
     classifiers=[
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Developers",
