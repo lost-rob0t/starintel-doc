@@ -12,42 +12,67 @@
 
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      mkPackage = pkgs:
-        pkgs.python3Packages.buildPythonPackage {
-          pname = "starintel-doc";
-          version = "0.9.0";
-          pyproject = true;
-          src = self;
+      mkPackageSet = pkgs:
+        let
+          ulidPy = pkgs.python3Packages.buildPythonPackage {
+            pname = "ulid-py";
+            version = "1.1.0";
+            pyproject = true;
 
-          build-system = with pkgs.python3Packages; [
-            setuptools
-          ];
+            src = pkgs.fetchPypi {
+              pname = "ulid-py";
+              version = "1.1.0";
+              hash = "sha256-3GiEvpFVjfB3wwEbn7DIfRCXy4/GU0sR8xAWGv1XOPA=";
+            };
 
-          dependencies = with pkgs.python3Packages; [
-            dataclasses-json
-            jsonschema
-            ulid-py
-          ];
+            build-system = with pkgs.python3Packages; [
+              setuptools
+            ];
 
-          pythonImportsCheck = [ "starintel_doc" ];
-          doCheck = false;
-
-          meta = {
-            description = "StarIntel v0.9.0 document parser, validator, and serializer";
-            homepage = "https://github.com/lost-rob0t/starintel-doc";
-            mainProgram = "starintel-conformance";
+            pythonImportsCheck = [ "ulid" ];
+            doCheck = false;
           };
+
+          starintelDoc = pkgs.python3Packages.buildPythonPackage {
+            pname = "starintel-doc";
+            version = "0.9.0";
+            pyproject = true;
+            src = self;
+
+            build-system = with pkgs.python3Packages; [
+              setuptools
+            ];
+
+            dependencies = with pkgs.python3Packages; [
+              dataclasses-json
+              jsonschema
+            ] ++ [
+              ulidPy
+            ];
+
+            pythonImportsCheck = [ "starintel_doc" ];
+            doCheck = false;
+
+            meta = {
+              description = "StarIntel v0.9.0 document parser, validator, and serializer";
+              homepage = "https://github.com/lost-rob0t/starintel-doc";
+              mainProgram = "starintel-conformance";
+            };
+          };
+        in
+        {
+          inherit ulidPy starintelDoc;
         };
     in
     {
       packages = forAllSystems (system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-          package = mkPackage pkgs;
+          packageSet = mkPackageSet nixpkgs.legacyPackages.${system};
         in
         {
-          default = package;
-          starintel-doc = package;
+          default = packageSet.starintelDoc;
+          starintel-doc = packageSet.starintelDoc;
+          ulid-py = packageSet.ulidPy;
         });
 
       apps = forAllSystems (system: {
@@ -82,8 +107,13 @@
           };
         });
 
-      overlays.default = final: _prev: {
-        starintel-doc = mkPackage final;
-      };
+      overlays.default = final: _prev:
+        let
+          packageSet = mkPackageSet final;
+        in
+        {
+          starintel-doc = packageSet.starintelDoc;
+          ulid-py = packageSet.ulidPy;
+        };
     };
 }
