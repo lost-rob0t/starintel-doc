@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +28,16 @@ ALIASES = {
     "lobbying_filing",
     "campaign_finance",
 }
+RFC3339_ZONE = re.compile(r"(?:Z|[+-]\d{2}:\d{2})$")
+FORMAT_CHECKER = FormatChecker()
+
+
+@FORMAT_CHECKER.checks("date-time", raises=(TypeError, ValueError))
+def valid_rfc3339_datetime(value: object) -> bool:
+    if not isinstance(value, str) or RFC3339_ZONE.search(value) is None:
+        return False
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return parsed.tzinfo is not None
 
 
 class ValidationError(ValueError):
@@ -104,7 +116,7 @@ def validate_document(document: dict[str, Any], schema: dict[str, Any] | None = 
             raise ValidationError("invalid_enum", "$.dtype: alias is not canonical")
         raise ValidationError("unknown_object_type", f"$.dtype: unknown document type {dtype!r}")
     errors = sorted(
-        Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(document),
+        Draft202012Validator(schema, format_checker=FORMAT_CHECKER).iter_errors(document),
         key=lambda item: (tuple(map(str, item.absolute_path)), item.message),
     )
     if errors:
