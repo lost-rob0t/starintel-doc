@@ -1,88 +1,89 @@
 {
-  description = "Document Spec for Star intel";
+  description = "StarIntel v0.9.0 document specification for Python";
 
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs = { self, nixpkgs }:
     let
-      system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; };
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
 
-      # Custom ulid-py dependency
-      ulid-py = pkgs.python312Packages.buildPythonPackage rec {
-        pname = "ulid-py";
-        version = "1.1.0";
-        format = "setuptools";
+      forAllSystems = nixpkgs.lib.genAttrs systems;
 
-        src = pkgs.fetchPypi {
-          inherit pname version;
-          hash = "sha256-3GiEvpFVjfB3wwEbn7DIfRCXy4/GU0sR8xAWGv1XOPA=";
+      mkPackage = pkgs:
+        pkgs.python3Packages.buildPythonPackage {
+          pname = "starintel-doc";
+          version = "0.9.0";
+          pyproject = true;
+          src = self;
+
+          build-system = with pkgs.python3Packages; [
+            setuptools
+          ];
+
+          dependencies = with pkgs.python3Packages; [
+            dataclasses-json
+            jsonschema
+            ulid-py
+          ];
+
+          pythonImportsCheck = [ "starintel_doc" ];
+          doCheck = false;
+
+          meta = {
+            description = "StarIntel v0.9.0 document parser, validator, and serializer";
+            homepage = "https://github.com/lost-rob0t/starintel-doc";
+            mainProgram = "starintel-conformance";
+          };
         };
+    in
+    {
+      packages = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          package = mkPackage pkgs;
+        in
+        {
+          default = package;
+          starintel-doc = package;
+        });
 
-        doCheck = false;
-
-        meta = with pkgs.lib; {
-          description = "Universally Unique Lexicographically Sortable Identifier (ULID) in Python";
-          homepage = "https://github.com/mdomke/python-ulid";
-          license = licenses.mit;
-        };
-      };
-
-      # Main starintel_doc package
-      starintel-doc = pkgs.python312Packages.buildPythonPackage rec {
-        pname = "starintel_doc";
-        version = "0.8.2";
-        format = "setuptools";
-
-        src = ./.;
-
-        propagatedBuildInputs = with pkgs.python312Packages; [
-          ulid-py
-          dataclasses-json
-        ];
-
-        doCheck = false;
-
-        meta = with pkgs.lib; {
-          description = "Document Spec for Star intel";
-          homepage = "https://github.com/lost-rob0t/starintel_doc";
-          license = licenses.mit;
-        };
-      };
-
-    in {
-      packages.${system} = {
-        default = starintel-doc;
-        starintel-doc = starintel-doc;
-        ulid-py = ulid-py;
-      };
-
-      devShells.${system}.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-          python312
-          python312Packages.pip
-          python312Packages.setuptools
-          python312Packages.wheel
-        ] ++ [
-          ulid-py
-        ];
-
-        shellHook = ''
-          export PYTHONPATH="${starintel-doc}/${pkgs.python312.sitePackages}:$PYTHONPATH"
-          echo "StarIntel Doc dev environment ready"
-          echo "Python: $(python --version)"
-          echo "Package version: ${starintel-doc.version}"
-        '';
-      };
-
-      # Apps for easy running
-      apps.${system} = {
+      apps = forAllSystems (system: {
         default = {
           type = "app";
-          program = "${pkgs.python312.withPackages (ps: [ starintel-doc ])}/bin/python";
+          program = "${self.packages.${system}.starintel-doc}/bin/starintel-conformance";
         };
+
+        starintel-conformance = {
+          type = "app";
+          program = "${self.packages.${system}.starintel-doc}/bin/starintel-conformance";
+        };
+      });
+
+      checks = forAllSystems (system: {
+        default = self.packages.${system}.starintel-doc;
+      });
+
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          package = self.packages.${system}.starintel-doc;
+          python = pkgs.python3.withPackages (_: [ package ]);
+        in
+        {
+          default = pkgs.mkShell {
+            packages = [
+              python
+              pkgs.python3Packages.build
+              pkgs.python3Packages.setuptools
+            ];
+          };
+        });
+
+      overlays.default = final: _prev: {
+        starintel-doc = mkPackage final;
       };
     };
 }
