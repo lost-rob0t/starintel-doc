@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 from copy import deepcopy
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -104,11 +105,13 @@ def validate_document(document: dict[str, Any], schema: dict[str, Any] | None = 
         raise ValidationError("unknown_object_type", f"$.dtype: unknown document type {dtype!r}")
     errors = sorted(
         Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(document),
-        key=lambda item: (list(item.absolute_path), item.message),
+        key=lambda item: (tuple(map(str, item.absolute_path)), item.message),
     )
     if errors:
         error = errors[0]
-        path = "$" + "".join(f"[{part}]" if isinstance(part, int) else f".{part}" for part in error.absolute_path)
+        path = "$" + "".join(
+            f"[{part}]" if isinstance(part, int) else f".{part}" for part in error.absolute_path
+        )
         raise ValidationError(category_for(error), f"{path}: {error.message}")
     return document
 
@@ -119,6 +122,38 @@ def roundtrip_document(document: dict[str, Any], schema: dict[str, Any] | None =
     value = json.loads(json.dumps(document, ensure_ascii=False, separators=(",", ":")))
     validate_document(value, schema)
     return value
+
+
+@dataclass(slots=True)
+class Document:
+    value: dict[str, Any]
+
+    @classmethod
+    def from_dict(cls, value: dict[str, Any], schema: dict[str, Any] | None = None) -> "Document":
+        return cls(roundtrip_document(deepcopy(value), schema))
+
+    @classmethod
+    def from_json(cls, value: str, schema: dict[str, Any] | None = None) -> "Document":
+        parsed = json.loads(value)
+        if not isinstance(parsed, dict):
+            raise ValidationError("wrong_type", "$: expected object")
+        return cls.from_dict(parsed, schema)
+
+    def validate(self, schema: dict[str, Any] | None = None) -> "Document":
+        validate_document(self.value, schema)
+        return self
+
+    def to_dict(self) -> dict[str, Any]:
+        return deepcopy(self.value)
+
+    def to_json(self, *, pretty: bool = False) -> str:
+        return json.dumps(
+            self.value,
+            ensure_ascii=False,
+            indent=2 if pretty else None,
+            separators=None if pretty else (",", ":"),
+            sort_keys=True,
+        )
 
 
 def schema_inventory(schema: dict[str, Any] | None = None) -> list[dict[str, Any]]:
@@ -132,7 +167,10 @@ def schema_inventory(schema: dict[str, Any] | None = None) -> list[dict[str, Any
             if "type" in definition:
                 item["type"] = definition["type"]
             if "anyOf" in definition:
-                item["any_of"] = [candidate.get("type", candidate.get("const", "any")) for candidate in definition["anyOf"]]
+                item["any_of"] = [
+                    candidate.get("type", candidate.get("const", "any"))
+                    for candidate in definition["anyOf"]
+                ]
             if "enum" in definition:
                 item["enum"] = definition["enum"]
             if "format" in definition:
