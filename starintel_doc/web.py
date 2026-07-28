@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass, field
+
 from starintel_doc.documents import Document
+from starintel_doc.hosts import Domain
 
 
 @dataclass
