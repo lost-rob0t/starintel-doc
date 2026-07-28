@@ -14,7 +14,8 @@ CANONICAL_DTYPES = (
     "grant", "host", "investigation-target", "legal-case", "lobbying-filing",
     "location", "media", "meeting", "message", "network", "observation", "org",
     "ownership", "person", "phone", "policy", "procurement", "product", "relation",
-    "research-pass", "social-media-post", "source", "target", "task", "url", "user",
+    "research-node", "research-pass", "social-media-post", "source", "target", "task",
+    "url", "user",
 )
 
 DTYPE_ALIASES = {
@@ -36,6 +37,7 @@ DTYPE_ALIASES = {
     "socialmpost": "social-media-post",
     "socialmediapost": "social-media-post",
     "investigationtarget": "investigation-target",
+    "researchnode": "research-node",
     "researchpass": "research-pass",
     "datasetmanifest": "dataset-manifest",
     "actormanifest": "actor-manifest",
@@ -89,6 +91,7 @@ DTYPE_SCHEMA_ORG_TYPES: dict[str, tuple[str, ...]] = {
     "procurement": ("DigitalDocument",),
     "product": ("Product",),
     "relation": ("Role",),
+    "research-node": ("Action",),
     "research-pass": ("CreativeWork",),
     "social-media-post": ("SocialMediaPosting",),
     "source": ("CreativeWork",),
