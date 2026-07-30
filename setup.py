@@ -6,6 +6,7 @@ setup(
     description="StarIntel v0.9.0 document parser, validator, and serializer",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
+    license="AGPL-3.0-only",
     packages=find_packages(),
     install_requires=[
         "ulid-py",
@@ -18,7 +19,7 @@ setup(
         ]
     },
     classifiers=[
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Programming Language :: Python :: 3 :: Only",
