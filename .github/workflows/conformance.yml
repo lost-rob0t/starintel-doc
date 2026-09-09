@@ -1,6 +1,7 @@
 name: StarIntel conformance
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [master, feat/operation-091]
