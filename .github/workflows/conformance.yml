@@ -3,7 +3,7 @@ name: StarIntel conformance
 on:
   pull_request:
   push:
-    branches: [master]
+    branches: [master, feat/operation-091]
 
 permissions:
   contents: read
