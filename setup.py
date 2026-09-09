@@ -2,8 +2,8 @@ from setuptools import find_packages, setup
 
 setup(
     name="starintel_doc",
-    version="0.9.0",
-    description="StarIntel v0.9.0 document parser, validator, and serializer",
+    version="0.9.1",
+    description="StarIntel 0.9.1 document parser, validator, serializer, and operation-compatible conformance adapter",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
     packages=find_packages(),
