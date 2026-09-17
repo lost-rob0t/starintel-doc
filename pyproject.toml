@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "starintel_doc"
-version = "0.9.2"
+version = "0.9.1"
 authors = [
     {name = "nsaspy", email = "nsaspy@airmail.cc"},
 ]
-description = "StarIntel 0.9.2 document parser with additive HTTP transaction and web-capture profile support"
+description = "StarIntel 0.9.1 base parser with additive 0.9.2 HTTP transaction and web-capture profile support"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
