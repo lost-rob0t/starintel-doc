@@ -11,6 +11,7 @@ from .v090 import Document, SPEC_VERSION, ValidationError, load_schema
 RELEASE_VERSION = "0.9.2"
 PROFILE_VERSION = RELEASE_VERSION
 PROFILE_ID = "https://spec.starintel.actor/profile/network-capture-v0.9.2.json"
+CAPTCHA_SOLVE_CAPABILITY = "captcha.solve"
 NETWORK_CAPTURE_DTYPES = frozenset({"http-transaction", "web-capture"})
 SENSITIVE_HEADERS = frozenset(
     {
@@ -31,6 +32,15 @@ DATE_TIME = {"type": "string", "format": "date-time"}
 NULLABLE_DATE_TIME = {"anyOf": [DATE_TIME, {"type": "null"}]}
 STRS = {"type": "array", "items": STR}
 JSON_MAP = {"type": "object", "additionalProperties": True}
+
+CAPTCHA_CONTEXT_FIELDS: dict[str, Any] = {
+    "challenge_status": STR,
+    "captcha_detection_id": STR,
+    "captcha_capability": STR,
+    "browser_session_ref": STR,
+    "network_context_ref": STR,
+    "proxy_actor_uri": STR,
+}
 
 HTTP_TRANSACTION_FIELDS: dict[str, Any] = {
     "transaction_id": STR,
@@ -67,9 +77,7 @@ HTTP_TRANSACTION_FIELDS: dict[str, Any] = {
     "redirect_from_id": STR,
     "redirect_to_id": STR,
     "capture_actor_uri": STR,
-    "proxy_actor_uri": STR,
-    "challenge_status": STR,
-    "challenge_actor_uri": STR,
+    **CAPTCHA_CONTEXT_FIELDS,
     "redacted_headers": STRS,
     "body_capture_policy": STR,
     "request_truncated": BOOL,
@@ -97,9 +105,7 @@ WEB_CAPTURE_FIELDS: dict[str, Any] = {
     "captured_at": NULLABLE_DATE_TIME,
     "http_transaction_ids": STRS,
     "capture_actor_uri": STR,
-    "proxy_actor_uri": STR,
-    "challenge_status": STR,
-    "challenge_actor_uri": STR,
+    **CAPTCHA_CONTEXT_FIELDS,
 }
 
 
@@ -190,6 +196,13 @@ def _validate(document: dict[str, Any]) -> dict[str, Any]:
     return Document.from_dict(document, profile_schema()).to_dict()
 
 
+def _apply_capture_context(data: dict[str, Any], fields: Mapping[str, Any] | None) -> None:
+    if fields:
+        data.update(deepcopy(dict(fields)))
+    if data.get("challenge_status") not in (None, "", "none"):
+        data.setdefault("captcha_capability", CAPTCHA_SOLVE_CAPABILITY)
+
+
 def build_http_transaction(
     *,
     dataset: str,
@@ -230,8 +243,7 @@ def build_http_transaction(
         "challenge_status": "none",
         "body_capture_policy": "artifact-reference-only",
     }
-    if fields:
-        data.update(deepcopy(dict(fields)))
+    _apply_capture_context(data, fields)
     document = {
         "_id": stable_capture_id("http-transaction", dataset, {"transaction_id": txid}),
         "dataset": dataset,
@@ -276,8 +288,7 @@ def build_web_capture(
         "http_transaction_ids": [],
         "challenge_status": "none",
     }
-    if fields:
-        data.update(deepcopy(dict(fields)))
+    _apply_capture_context(data, fields)
     document = {
         "_id": stable_capture_id("web-capture", dataset, {"capture_id": cid}),
         "dataset": dataset,
