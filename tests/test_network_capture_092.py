@@ -12,7 +12,7 @@ from starintel_doc import (
     network_capture_to_jsonld,
     profile_schema,
 )
-from starintel_doc.network_capture import redact_headers
+from starintel_doc.network_capture import CAPTCHA_SOLVE_CAPABILITY, redact_headers
 from starintel_doc.v090 import Document, ValidationError
 
 NOW = "2026-09-17T01:00:00Z"
@@ -31,7 +31,7 @@ def test_http_transaction_redacts_auth_and_cookies():
         dataset="fixture",
         method="get",
         url="https://example.test/a",
-        response_status=200,
+        response_status=403,
         observed_at=NOW,
         request_headers={"Authorization": "Bearer no", "Accept": "text/html"},
         response_headers={"Set-Cookie": "sid=no", "Content-Type": "text/html"},
@@ -40,12 +40,20 @@ def test_http_transaction_redacts_auth_and_cookies():
             "request_body_hash": "sha256:req",
             "response_body_artifact_uri": "artifact://response/1",
             "response_body_hash": "sha256:resp",
+            "challenge_status": "observed",
+            "captcha_detection_id": "captcha-detection:fixture-1",
+            "browser_session_ref": "star-secret://webdriver/session/fixture-1",
+            "network_context_ref": "star-secret://network/context/fixture-1",
+            "proxy_actor_uri": "star://proxy.starintel.actor/actor/egress",
         },
     )
     assert doc["data"]["method"] == "GET"
     assert doc["data"]["request_headers"]["Authorization"] == "[REDACTED]"
     assert doc["data"]["response_headers"]["Set-Cookie"] == "[REDACTED]"
     assert doc["data"]["body_capture_policy"] == "artifact-reference-only"
+    assert doc["data"]["captcha_capability"] == CAPTCHA_SOLVE_CAPABILITY
+    assert doc["data"]["browser_session_ref"].startswith("star-secret://")
+    assert doc["data"]["network_context_ref"].startswith("star-secret://")
     Document.from_dict(doc, profile_schema())
 
 
@@ -56,9 +64,15 @@ def test_web_capture_is_artifact_backed():
         screenshot_uri="artifact://screenshots/a.png",
         screenshot_hash="sha256:a",
         captured_at=NOW,
-        fields={"viewport_width": 1440, "viewport_height": 900},
+        fields={
+            "viewport_width": 1440,
+            "viewport_height": 900,
+            "challenge_status": "observed",
+            "browser_session_ref": "star-secret://webdriver/session/fixture-2",
+        },
     )
     assert doc["data"]["screenshot_uri"].startswith("artifact://")
+    assert doc["data"]["captcha_capability"] == CAPTCHA_SOLVE_CAPABILITY
     assert network_capture_to_jsonld(doc)["@type"] == "DigitalDocument"
 
 
