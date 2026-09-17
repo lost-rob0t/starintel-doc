@@ -12,6 +12,16 @@ from starintel_doc.v090 import (
     schema_inventory,
     validate_document,
 )
+from starintel_doc.network_capture import (
+    NETWORK_CAPTURE_DTYPES,
+    PROFILE_VERSION,
+    RELEASE_VERSION,
+    build_http_transaction,
+    build_web_capture,
+    profile_schema,
+    redact_headers,
+    to_jsonld as network_capture_to_jsonld,
+)
 
 # Legacy flat 0.8 modules remain importable for explicit migration work.
 from starintel_doc import documents as legacy_documents
@@ -29,10 +39,18 @@ __all__ = [
     "ADAPTER_VERSION",
     "SPEC_VERSION",
     "Document",
+    "NETWORK_CAPTURE_DTYPES",
+    "PROFILE_VERSION",
+    "RELEASE_VERSION",
     "UnsupportedVersion",
     "ValidationError",
+    "build_http_transaction",
+    "build_web_capture",
     "capabilities",
     "load_schema",
+    "network_capture_to_jsonld",
+    "profile_schema",
+    "redact_headers",
     "roundtrip_document",
     "schema_inventory",
     "validate_document",
