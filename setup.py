@@ -2,8 +2,8 @@ from setuptools import find_packages, setup
 
 setup(
     name="starintel_doc",
-    version="0.9.1",
-    description="StarIntel 0.9.1 base parser with additive 0.9.2 HTTP transaction and web-capture profile support",
+    version="0.10.1",
+    description="StarIntel 0.10.1 parser, backwards-compatible migration runtime, and secure artifact helpers",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
     packages=find_packages(),
