@@ -6,7 +6,7 @@ from hashlib import md5
 import time
 import ulid
 
-from starintel_doc.v090 import SPEC_VERSION
+from starintel_doc.v0101 import SPEC_VERSION
 
 STARINTEL_DOC_VERSION = SPEC_VERSION
 LEGACY_DOCUMENT_VERSION = "0.8.0"
@@ -18,7 +18,7 @@ class Document:
     """Legacy flat 0.8 compatibility model.
 
     New code must use ``starintel_doc.Document`` from the package root, which
-    implements the strict StarIntel v0.9.0 envelope.
+    implements the strict StarIntel v0.10.1 envelope (with v0.9 read compatibility).
     """
 
     id: str = field(kw_only=True, default="", metadata=config(field_name="_id"))
