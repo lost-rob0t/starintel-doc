@@ -6,11 +6,11 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from .v090 import Document, SPEC_VERSION, ValidationError, load_schema
+from .v0101 import Document, SPEC_VERSION, ValidationError, load_schema
 
-RELEASE_VERSION = "0.9.2"
+RELEASE_VERSION = "0.10.1"
 PROFILE_VERSION = RELEASE_VERSION
-PROFILE_ID = "https://spec.starintel.actor/profile/network-capture-v0.9.2.json"
+PROFILE_ID = "https://spec.starintel.actor/schema/starintel-doc-v0.10.1.json"
 CAPTCHA_SOLVE_CAPABILITY = "captcha.solve"
 NETWORK_CAPTURE_DTYPES = frozenset({"http-transaction", "web-capture"})
 SENSITIVE_HEADERS = frozenset(
@@ -119,44 +119,12 @@ def _data_schema(properties: dict[str, Any], required: tuple[str, ...]) -> dict[
 
 
 def profile_schema(base_schema: dict[str, Any] | None = None) -> dict[str, Any]:
-    schema = deepcopy(base_schema or load_schema())
-    dtype_definition = schema.get("properties", {}).get("dtype")
-    if not isinstance(dtype_definition, dict):
-        raise TypeError("base StarIntel schema is missing $.properties.dtype")
-    allowed = dtype_definition.get("enum")
-    if not isinstance(allowed, list):
-        raise TypeError("base StarIntel schema dtype is not an enum")
-    dtype_definition["enum"] = sorted(set(allowed) | NETWORK_CAPTURE_DTYPES)
-    schema["$id"] = PROFILE_ID
-    schema["title"] = "StarIntel v0.9.0 + network-capture profile v0.9.2"
-    branches = schema.setdefault("allOf", [])
-    branches.extend(
-        [
-            {
-                "if": {"properties": {"dtype": {"const": "http-transaction"}}},
-                "then": {
-                    "properties": {
-                        "data": _data_schema(
-                            HTTP_TRANSACTION_FIELDS,
-                            ("transaction_id", "method", "url", "response_status"),
-                        )
-                    }
-                },
-            },
-            {
-                "if": {"properties": {"dtype": {"const": "web-capture"}}},
-                "then": {
-                    "properties": {
-                        "data": _data_schema(
-                            WEB_CAPTURE_FIELDS,
-                            ("capture_id", "url", "screenshot_uri", "screenshot_hash"),
-                        )
-                    }
-                },
-            },
-        ]
-    )
-    return schema
+    """Return the unified 0.10.1 schema.
+
+    The 0.9.2 network-capture side profile was absorbed into core 0.10.1;
+    this API name remains for callers migrating from the old profile.
+    """
+    return deepcopy(base_schema or load_schema())
 
 
 def utc_now() -> str:
