@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from starintel_doc.v090 import (
+from starintel_doc.v0101 import (
     ADAPTER_VERSION,
     SPEC_VERSION,
     Document,
@@ -12,6 +12,7 @@ from starintel_doc.v090 import (
     schema_inventory,
     validate_document,
 )
+from starintel_doc.migration import MigrationError, migrate_batch, migrate_document
 from starintel_doc.network_capture import (
     NETWORK_CAPTURE_DTYPES,
     PROFILE_VERSION,
@@ -44,10 +45,13 @@ __all__ = [
     "RELEASE_VERSION",
     "UnsupportedVersion",
     "ValidationError",
+    "MigrationError",
     "build_http_transaction",
     "build_web_capture",
     "capabilities",
     "load_schema",
+    "migrate_batch",
+    "migrate_document",
     "network_capture_to_jsonld",
     "profile_schema",
     "redact_headers",

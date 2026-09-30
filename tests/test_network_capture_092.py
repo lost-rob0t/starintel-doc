@@ -13,13 +13,14 @@ from starintel_doc import (
     profile_schema,
 )
 from starintel_doc.network_capture import CAPTCHA_SOLVE_CAPABILITY, redact_headers
-from starintel_doc.v090 import Document, ValidationError
+from starintel_doc.v090 import Document, SPEC_VERSION as LEGACY_SPEC_VERSION, ValidationError
 
 NOW = "2026-09-17T01:00:00Z"
 
 
 def test_release_is_additive_to_v09_wire():
-    assert SPEC_VERSION == "0.9.0"
+    assert SPEC_VERSION == "0.10.1"
+    assert LEGACY_SPEC_VERSION == "0.9.0"
     assert PROFILE_VERSION == "0.9.2"
     dtypes = profile_schema()["properties"]["dtype"]["enum"]
     assert "http-transaction" in dtypes

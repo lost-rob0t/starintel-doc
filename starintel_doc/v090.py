@@ -58,7 +58,10 @@ def schema_path() -> Path:
     root = os.environ.get("STARINTEL_CONFORMANCE_ROOT")
     if root:
         return Path(root) / "schemas" / "starintel-doc-v0.9.0.schema.json"
-    return Path.cwd() / "schemas" / "starintel-doc-v0.9.0.schema.json"
+    checkout_schema = Path.cwd() / "schemas" / "starintel-doc-v0.9.0.schema.json"
+    if checkout_schema.is_file():
+        return checkout_schema
+    return Path(__file__).with_name("spec") / "legacy-0.9.0-schema.json"
 
 
 def load_schema() -> dict[str, Any]:

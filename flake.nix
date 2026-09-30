@@ -33,7 +33,7 @@
       # Main starintel_doc package
       starintel-doc = pkgs.python312Packages.buildPythonPackage rec {
         pname = "starintel_doc";
-        version = "0.8.2";
+        version = "0.10.1";
         format = "setuptools";
 
         src = ./.;
@@ -41,9 +41,14 @@
         propagatedBuildInputs = with pkgs.python312Packages; [
           ulid-py
           dataclasses-json
+          jsonschema
         ];
 
-        doCheck = false;
+        nativeCheckInputs = with pkgs.python312Packages; [
+          pytestCheckHook
+        ];
+
+        doCheck = true;
 
         meta = with pkgs.lib; {
           description = "Document Spec for Star intel";
@@ -61,10 +66,11 @@
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = with pkgs; [
-          python312
-          python312Packages.pip
-          python312Packages.setuptools
-          python312Packages.wheel
+          (python312.withPackages (ps: with ps; [
+            dataclasses-json
+            jsonschema
+            pytest
+          ]))
         ] ++ [
           ulid-py
         ];

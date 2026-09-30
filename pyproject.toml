@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "starintel_doc"
-version = "0.9.1"
+version = "0.10.1"
 authors = [
     {name = "nsaspy", email = "nsaspy@airmail.cc"},
 ]
-description = "StarIntel 0.9.1 base parser with additive 0.9.2 HTTP transaction and web-capture profile support"
+description = "StarIntel 0.10.1 Python binding generated from the Star-Lang authority"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -20,6 +20,9 @@ dependencies = [
     "jsonschema>=4.23,<5",
     "ulid-py",
 ]
+
+[tool.setuptools.package-data]
+starintel_doc = ["spec/*.json"]
 
 [project.scripts]
 starintel-conformance = "starintel_doc.conformance_adapter:main"
