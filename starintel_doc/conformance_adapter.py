@@ -4,7 +4,7 @@ import json
 import sys
 from typing import Any
 
-from .v090 import (
+from .canonical import (
     ADAPTER_VERSION,
     SPEC_VERSION,
     UnsupportedVersion,
@@ -28,29 +28,36 @@ def main() -> int:
             raise TypeError("request must be a JSON object")
         command = request.get("command")
         if command == "version":
-            emit({"ok": True, "language": "python", "spec_version": SPEC_VERSION, "adapter_version": ADAPTER_VERSION})
+            requested = request.get("spec_version", SPEC_VERSION)
+            if requested not in {SPEC_VERSION, "0.9.0"}:
+                raise UnsupportedVersion(requested)
+            emit({"ok": True, "language": "python", "spec_version": requested, "adapter_version": ADAPTER_VERSION})
             return 0
 
         requested = request.get("spec_version", SPEC_VERSION)
-        if requested != SPEC_VERSION:
+        if requested == "0.9.0":
+            # Historical compatibility is selected explicitly by the caller.
+            from . import v090 as runtime
+        elif requested == SPEC_VERSION:
+            from . import canonical as runtime
+        else:
             raise UnsupportedVersion(requested)
-
-        schema = load_schema()
+        schema = runtime.load_schema()
         if command == "capabilities":
-            emit({"ok": True, **capabilities(schema)})
+            emit({"ok": True, **runtime.capabilities(schema)})
             return 0
         if command == "schema-inventory":
-            emit({"ok": True, "spec_version": SPEC_VERSION, "inventory": schema_inventory(schema)})
+            emit({"ok": True, "spec_version": requested, "inventory": runtime.schema_inventory(schema)})
             return 0
 
         document = request.get("document")
         if command == "validate":
-            validate_document(document, schema)
-            emit({"ok": True, "spec_version": SPEC_VERSION, "warnings": []})
+            runtime.validate_document(document, schema)
+            emit({"ok": True, "spec_version": requested, "warnings": []})
             return 0
         if command in {"normalize", "roundtrip"}:
-            value = roundtrip_document(document, schema)
-            emit({"ok": True, "spec_version": SPEC_VERSION, "document": value, "warnings": []})
+            value = runtime.roundtrip_document(document, schema)
+            emit({"ok": True, "spec_version": requested, "document": value, "warnings": []})
             return 0
         raise ValueError(f"unsupported command: {command!r}")
     except UnsupportedVersion as exc:

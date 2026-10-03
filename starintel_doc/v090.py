@@ -40,15 +40,7 @@ def valid_rfc3339_datetime(value: object) -> bool:
     return parsed.tzinfo is not None
 
 
-class ValidationError(ValueError):
-    def __init__(self, category: str, message: str) -> None:
-        super().__init__(message)
-        self.category = category
-
-
-class UnsupportedVersion(ValidationError):
-    def __init__(self, value: Any) -> None:
-        super().__init__("unsupported_spec_version", f"unsupported spec version: {value!r}")
+from starintel_canonical.errors import ValidationError, UnsupportedVersion
 
 
 def schema_path() -> Path:
@@ -58,7 +50,7 @@ def schema_path() -> Path:
     root = os.environ.get("STARINTEL_CONFORMANCE_ROOT")
     if root:
         return Path(root) / "schemas" / "starintel-doc-v0.9.0.schema.json"
-    return Path.cwd() / "schemas" / "starintel-doc-v0.9.0.schema.json"
+    return Path(__file__).parent / "_legacy" / "starintel-doc-v0.9.0.schema.json"
 
 
 def load_schema() -> dict[str, Any]:

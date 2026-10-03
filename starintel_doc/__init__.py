@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from starintel_doc.v090 import (
+from starintel_doc.canonical import (
     ADAPTER_VERSION,
     SPEC_VERSION,
     Document,
@@ -14,8 +14,6 @@ from starintel_doc.v090 import (
 )
 from starintel_doc.network_capture import (
     NETWORK_CAPTURE_DTYPES,
-    PROFILE_VERSION,
-    RELEASE_VERSION,
     build_http_transaction,
     build_web_capture,
     profile_schema,
@@ -34,6 +32,9 @@ from starintel_doc import relations as legacy_relations
 from starintel_doc import social_media as legacy_social_media
 from starintel_doc import targets as legacy_targets
 from starintel_doc import web as legacy_web
+
+RELEASE_VERSION = SPEC_VERSION
+PROFILE_VERSION = SPEC_VERSION
 
 __all__ = [
     "ADAPTER_VERSION",
