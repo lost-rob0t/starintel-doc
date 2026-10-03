@@ -35,3 +35,17 @@ nix flake check -L
 
 Canonical migration policy and fixtures are consumed from the packaged release.
 Migration implementations must pass those fixtures before claiming support.
+
+### Capture producers
+
+The package-root `build_http_transaction` and `build_web_capture` functions emit
+canonical flat 0.10.1 documents validated against the pinned generated release.
+Python keyword arguments stay snake_case; the optional `fields` mapping uses
+canonical lowerCamelCase keys. Decimal wire values must be decimal strings (or
+`Decimal` for `durationMs` / `deviceScaleFactor`). Envelope fields cannot be
+replaced through `fields`. Headers are redacted after field overrides.
+
+Historical 0.9.2 capture behavior remains explicitly available from
+`starintel_doc.network_capture`; its `profile_schema` is also available as
+`starintel_doc.legacy_profile_schema`. Existing historical documents are not
+rewritten or silently relabeled.

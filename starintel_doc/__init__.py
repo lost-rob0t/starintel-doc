@@ -12,14 +12,16 @@ from starintel_doc.canonical import (
     schema_inventory,
     validate_document,
 )
-from starintel_doc.network_capture import (
+from starintel_doc.canonical_capture import (
     NETWORK_CAPTURE_DTYPES,
     build_http_transaction,
     build_web_capture,
-    profile_schema,
     redact_headers,
     to_jsonld as network_capture_to_jsonld,
 )
+
+# Explicit historical profile API. New capture producers use the canonical schema.
+from starintel_doc.network_capture import profile_schema as legacy_profile_schema
 
 # Legacy flat 0.8 modules remain importable for explicit migration work.
 from starintel_doc import documents as legacy_documents
@@ -50,7 +52,7 @@ __all__ = [
     "capabilities",
     "load_schema",
     "network_capture_to_jsonld",
-    "profile_schema",
+    "legacy_profile_schema",
     "redact_headers",
     "roundtrip_document",
     "schema_inventory",
