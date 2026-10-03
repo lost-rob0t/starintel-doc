@@ -4,10 +4,10 @@ import copy
 
 import pytest
 
-from starintel_doc import (
+from starintel_doc.network_capture import (
     build_http_transaction,
     build_web_capture,
-    network_capture_to_jsonld,
+    to_jsonld as network_capture_to_jsonld,
     profile_schema,
 )
 from starintel_doc.network_capture import CAPTCHA_SOLVE_CAPABILITY, PROFILE_VERSION, redact_headers
