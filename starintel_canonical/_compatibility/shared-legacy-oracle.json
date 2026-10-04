@@ -1,0 +1,5485 @@
+{
+  "repository": "lost-rob0t/starintel-gpt-auto-dig",
+  "sourcePath": "starintel_doc/spec.py",
+  "commit": "cb258634bf413b9f3620c229dfd821270e8d5377",
+  "sourceSha256": "5d51f48bec710e3785d2d7d8ef1313e887371f1bbe69232e6f13a77a221ac2c9",
+  "schemas": {
+    "document": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "document_kind": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "author_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publisher_id": {
+          "type": "string"
+        },
+        "section_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "revision_label": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "person": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "canonical_name": {
+          "type": "string"
+        },
+        "name_parts": {},
+        "birth_date_precision": {
+          "type": "string"
+        },
+        "birth_location_id": {
+          "type": "string"
+        },
+        "residence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "employment_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "membership_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "public_office_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ownership_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "campaign_finance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "legal_case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "biography_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "same_as_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "etype": {
+          "type": "string"
+        },
+        "eid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "legal_name": {
+          "type": "string"
+        },
+        "short_name": {
+          "type": "string"
+        },
+        "former_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bio": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "founded_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dissolved_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "website": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "external_ids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scheme": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "jurisdiction": {
+                "type": "string"
+              },
+              "canonical": {
+                "type": "boolean"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              },
+              "valid_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "valid_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "scheme",
+              "value"
+            ]
+          }
+        },
+        "contact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fname": {
+          "type": "string"
+        },
+        "mname": {
+          "type": "string"
+        },
+        "lname": {
+          "type": "string"
+        },
+        "suffix": {
+          "type": "string"
+        },
+        "full_name": {
+          "type": "string"
+        },
+        "preferred_name": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string"
+        },
+        "pronouns": {
+          "type": "string"
+        },
+        "dob": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "birthplace": {
+          "type": "string"
+        },
+        "death_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nationalities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "citizenships": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "occupations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "employers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "positions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "education_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "social_account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "phone_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "family_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "associate_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "political_affiliations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "professional_affiliations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "public_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "misc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "org": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "legal_form": {
+          "type": "string"
+        },
+        "incorporated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "incorporation_location_id": {
+          "type": "string"
+        },
+        "registration_ids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scheme": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "jurisdiction": {
+                "type": "string"
+              },
+              "canonical": {
+                "type": "boolean"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              },
+              "valid_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "valid_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "scheme",
+              "value"
+            ]
+          }
+        },
+        "headquarters_id": {
+          "type": "string"
+        },
+        "office_location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "leadership_role_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "governance_document_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filing_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contract_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "grant_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lobbying_filing_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "campaign_finance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "financial_observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "same_as_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "etype": {
+          "type": "string"
+        },
+        "eid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "legal_name": {
+          "type": "string"
+        },
+        "short_name": {
+          "type": "string"
+        },
+        "former_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bio": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "founded_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dissolved_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "website": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "external_ids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scheme": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "jurisdiction": {
+                "type": "string"
+              },
+              "canonical": {
+                "type": "boolean"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              },
+              "valid_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "valid_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "scheme",
+              "value"
+            ]
+          }
+        },
+        "contact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "org_type": {
+          "type": "string"
+        },
+        "registration_number": {
+          "type": "string"
+        },
+        "reg": {
+          "type": "string"
+        },
+        "tax_id": {
+          "type": "string"
+        },
+        "lei": {
+          "type": "string"
+        },
+        "ticker": {
+          "type": "string"
+        },
+        "exchange": {
+          "type": "string"
+        },
+        "industry": {
+          "type": "string"
+        },
+        "sectors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mission": {
+          "type": "string"
+        },
+        "business": {
+          "type": "string"
+        },
+        "headquarters": {
+          "type": "string"
+        },
+        "parent_id": {
+          "type": "string"
+        },
+        "subsidiary_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "affiliate_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "predecessor_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "successor_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "beneficial_owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "director_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "executive_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "member_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "employee_count": {
+          "type": "integer"
+        },
+        "revenue": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "fiscal_year_end": {
+          "type": "string"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "markets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "government_levels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "statement_id": {
+          "type": "string"
+        },
+        "predicate_id": {
+          "type": "string"
+        },
+        "predicate_namespace": {
+          "type": "string"
+        },
+        "subject_role": {
+          "type": "string"
+        },
+        "object_role": {
+          "type": "string"
+        },
+        "subject_dtype": {
+          "type": "string"
+        },
+        "object_dtype": {
+          "type": "string"
+        },
+        "asserted_by_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "negated": {
+          "type": "boolean"
+        },
+        "symmetric": {
+          "type": "boolean"
+        },
+        "transitive": {
+          "type": "boolean"
+        },
+        "qualifier_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "subject": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "entity_id": {
+                  "type": "string"
+                },
+                "document_id": {
+                  "type": "string"
+                },
+                "external_id": {
+                  "type": "string"
+                },
+                "dtype": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "unresolved": {
+                  "type": "boolean"
+                },
+                "external_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scheme": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "issuer": {
+                        "type": "string"
+                      },
+                      "jurisdiction": {
+                        "type": "string"
+                      },
+                      "canonical": {
+                        "type": "boolean"
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0
+                      },
+                      "valid_from": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "valid_to": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "scheme",
+                      "value"
+                    ]
+                  }
+                },
+                "aliases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "qualifiers": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": false
+            }
+          ]
+        },
+        "predicate": {
+          "type": "string"
+        },
+        "object": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "entity_id": {
+                  "type": "string"
+                },
+                "document_id": {
+                  "type": "string"
+                },
+                "external_id": {
+                  "type": "string"
+                },
+                "dtype": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "unresolved": {
+                  "type": "boolean"
+                },
+                "external_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scheme": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "issuer": {
+                        "type": "string"
+                      },
+                      "jurisdiction": {
+                        "type": "string"
+                      },
+                      "canonical": {
+                        "type": "boolean"
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0
+                      },
+                      "valid_from": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "valid_to": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "scheme",
+                      "value"
+                    ]
+                  }
+                },
+                "aliases": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "qualifiers": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "metadata": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "entity_id": {
+                    "type": "string"
+                  },
+                  "document_id": {
+                    "type": "string"
+                  },
+                  "external_id": {
+                    "type": "string"
+                  },
+                  "dtype": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "unresolved": {
+                    "type": "boolean"
+                  },
+                  "external_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "scheme": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "issuer": {
+                          "type": "string"
+                        },
+                        "jurisdiction": {
+                          "type": "string"
+                        },
+                        "canonical": {
+                          "type": "boolean"
+                        },
+                        "confidence": {
+                          "type": "number",
+                          "minimum": 0.0,
+                          "maximum": 1.0
+                        },
+                        "valid_from": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "valid_to": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "format": "date-time"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "notes": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "scheme",
+                        "value"
+                      ]
+                    }
+                  },
+                  "aliases": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "qualifiers": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          ]
+        },
+        "source": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "directed": {
+          "type": "boolean"
+        },
+        "inverse_predicate": {
+          "type": "string"
+        },
+        "relation_type": {
+          "type": "string"
+        },
+        "qualifiers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "weight": {
+          "type": "number"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "start_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "subject",
+        "predicate",
+        "object"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "root_target_id": {
+          "type": "string"
+        },
+        "parent_target_id": {
+          "type": "string"
+        },
+        "depends_on_target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "completion_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stop_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "result_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attempt_count": {
+          "type": "integer"
+        },
+        "last_run_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "target_id": {
+          "type": "string"
+        },
+        "target_type": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "research_question": {
+          "type": "string"
+        },
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "in_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope_type": {
+          "type": "string"
+        },
+        "seed_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_dtypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferred_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "delay": {
+          "type": "integer"
+        },
+        "recurring": {
+          "type": "boolean"
+        },
+        "recurrence": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {}
+        },
+        "depth": {
+          "type": "integer"
+        },
+        "max_depth": {
+          "type": "integer"
+        },
+        "breadth": {
+          "type": "integer"
+        },
+        "priority": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        },
+        "selection_reason": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_run_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ]
+    },
+    "investigation-target": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "root_target_id": {
+          "type": "string"
+        },
+        "parent_target_id": {
+          "type": "string"
+        },
+        "depends_on_target_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "completion_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stop_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "result_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attempt_count": {
+          "type": "integer"
+        },
+        "last_run_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "target_id": {
+          "type": "string"
+        },
+        "target_type": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "research_question": {
+          "type": "string"
+        },
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "in_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope_type": {
+          "type": "string"
+        },
+        "seed_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required_dtypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferred_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "excluded_sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "delay": {
+          "type": "integer"
+        },
+        "recurring": {
+          "type": "boolean"
+        },
+        "recurrence": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {}
+        },
+        "depth": {
+          "type": "integer"
+        },
+        "max_depth": {
+          "type": "integer"
+        },
+        "breadth": {
+          "type": "integer"
+        },
+        "priority": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        },
+        "selection_reason": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_run_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "target"
+      ]
+    },
+    "domain": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unicode_domain": {
+          "type": "string"
+        },
+        "punycode_domain": {
+          "type": "string"
+        },
+        "tld": {
+          "type": "string"
+        },
+        "registrar_id": {
+          "type": "string"
+        },
+        "registrant_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "certificate_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "url_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mail_exchange_hosts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "zone_hash": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "record_type": {
+          "type": "string"
+        },
+        "record": {
+          "type": "string"
+        },
+        "resolved_addresses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "registrar": {
+          "type": "string"
+        },
+        "registrant": {
+          "type": "string"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expires_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "nameservers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dns_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "subdomains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "whois": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "dnssec": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "domain"
+      ]
+    },
+    "network": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "network_type": {
+          "type": "string"
+        },
+        "prefixes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allocation_id": {
+          "type": "string"
+        },
+        "registrant_id": {
+          "type": "string"
+        },
+        "contact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "routing_policy": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bgp_observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "announced_by_asns": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "rpki_status": {
+          "type": "string"
+        },
+        "org": {
+          "type": "string"
+        },
+        "asn": {
+          "type": "integer"
+        },
+        "asn_name": {
+          "type": "string"
+        },
+        "subnet": {
+          "type": "string"
+        },
+        "cidr": {
+          "type": "string"
+        },
+        "range_start": {
+          "type": "string"
+        },
+        "range_end": {
+          "type": "string"
+        },
+        "rir": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "route_objects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "peer_asns": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "upstream_asns": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "downstream_asns": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "host": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "host_type": {
+          "type": "string"
+        },
+        "interface_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "service_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "certificate_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "software_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cloud_account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "virtualization_type": {
+          "type": "string"
+        },
+        "parent_host_id": {
+          "type": "string"
+        },
+        "observed_by_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "fqdn": {
+          "type": "string"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "ipv4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ipv6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mac": {
+          "type": "string"
+        },
+        "asn": {
+          "type": "integer"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "network_id": {
+          "type": "string"
+        },
+        "domain_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reverse_dns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "os": {
+          "type": "string"
+        },
+        "os_version": {
+          "type": "string"
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "device_type": {
+          "type": "string"
+        },
+        "device_class": {
+          "type": "string",
+          "enum": [
+            "other",
+            "unknown",
+            "general-purpose",
+            "router",
+            "broadband-router",
+            "switch",
+            "wap",
+            "bridge",
+            "firewall",
+            "load-balancer",
+            "proxy-server",
+            "print-server",
+            "terminal-server",
+            "terminal",
+            "phone",
+            "voip-phone",
+            "voip-adapter",
+            "pbx",
+            "webcam",
+            "printer",
+            "media-device",
+            "game-console",
+            "pda",
+            "storage",
+            "storage-misc",
+            "power-device",
+            "remote-management",
+            "security-misc",
+            "specialized",
+            "telecom-misc",
+            "iot"
+          ]
+        },
+        "device_class_source": {
+          "type": "string"
+        },
+        "device_class_evidence": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "certificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "technologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "url": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "canonical_url": {
+          "type": "string"
+        },
+        "final_url": {
+          "type": "string"
+        },
+        "parent_url_id": {
+          "type": "string"
+        },
+        "discovered_from_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "http_exchanges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "archive_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "screenshot_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "content_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "crawl_depth": {
+          "type": "integer"
+        },
+        "robots_allowed": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        },
+        "scheme": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "fragment": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "status_code": {
+          "type": "integer"
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "redirect_chain": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "technologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "url"
+      ]
+    },
+    "geo": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geometry_type": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "geometry": {},
+        "feature_type": {
+          "type": "string"
+        },
+        "accuracy_meters": {
+          "type": "number"
+        },
+        "source_coordinate_system": {
+          "type": "string"
+        },
+        "address_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contains_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contained_by_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "street2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "postal": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "long": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "alt": {
+          "type": "number"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "geohash": {
+          "type": "string"
+        },
+        "parent_location_id": {
+          "type": "string"
+        },
+        "contained_location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "formatted": {
+          "type": "string"
+        },
+        "address_type": {
+          "type": "string"
+        },
+        "building": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string"
+        },
+        "district": {
+          "type": "string"
+        },
+        "administrative_areas": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "geometry": {},
+        "occupant_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "street2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "postal": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "long": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "alt": {
+          "type": "number"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "geohash": {
+          "type": "string"
+        },
+        "parent_location_id": {
+          "type": "string"
+        },
+        "contained_location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "location": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "geometry_type": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "geometry": {},
+        "feature_type": {
+          "type": "string"
+        },
+        "accuracy_meters": {
+          "type": "number"
+        },
+        "address_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contains_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contained_by_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "jurisdiction_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "location_type": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "street": {
+          "type": "string"
+        },
+        "street2": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "county": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "postal": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "lat": {
+          "type": "number"
+        },
+        "long": {
+          "type": "number"
+        },
+        "lon": {
+          "type": "number"
+        },
+        "alt": {
+          "type": "number"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "geohash": {
+          "type": "string"
+        },
+        "parent_location_id": {
+          "type": "string"
+        },
+        "contained_location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "phone": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "normalized_number": {
+          "type": "string"
+        },
+        "e164": {
+          "type": "string"
+        },
+        "subscriber_id": {
+          "type": "string"
+        },
+        "provider_id": {
+          "type": "string"
+        },
+        "usage_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "porting_history": {
+          "type": "string"
+        },
+        "account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "owner_id": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "number": {
+          "type": "string"
+        },
+        "carrier": {
+          "type": "string"
+        },
+        "phone_type": {
+          "type": "string"
+        },
+        "country_code": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "number"
+      ]
+    },
+    "email": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "normalized_address": {
+          "type": "string"
+        },
+        "local_part": {
+          "type": "string"
+        },
+        "domain_id": {
+          "type": "string"
+        },
+        "owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "provider_id": {
+          "type": "string"
+        },
+        "usage_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "account_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deliverability_status": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "owner_id": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "verified_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "user": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "address"
+      ]
+    },
+    "email-message": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sender_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recipient_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reply_to_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message_id_header": {
+          "type": "string"
+        },
+        "in_reply_to_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reference_message_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "body_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "attachment_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "authentication_results": {},
+        "transport_hops": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "content": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "is_reply": {
+          "type": "boolean"
+        },
+        "media": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "type": "string"
+        },
+        "reply_to": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "thread_id": {
+          "type": "string"
+        },
+        "mentions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reactions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "posted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "edited_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "visibility": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "to": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "from": {
+          "type": "string"
+        },
+        "cc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bcc": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "account_id": {
+          "type": "string"
+        },
+        "platform_id": {
+          "type": "string"
+        },
+        "profile_url": {
+          "type": "string"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_active_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owner_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "follower_count": {
+          "type": "integer"
+        },
+        "following_count": {
+          "type": "integer"
+        },
+        "post_count": {
+          "type": "integer"
+        },
+        "account_status": {
+          "type": "string"
+        },
+        "verified_type": {
+          "type": "string"
+        },
+        "etype": {
+          "type": "string"
+        },
+        "eid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "display_name": {
+          "type": "string"
+        },
+        "legal_name": {
+          "type": "string"
+        },
+        "short_name": {
+          "type": "string"
+        },
+        "former_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bio": {
+          "type": "string"
+        },
+        "jurisdiction": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "founded_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dissolved_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "website": {
+          "type": "string"
+        },
+        "image_url": {
+          "type": "string"
+        },
+        "logo_url": {
+          "type": "string"
+        },
+        "external_ids": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scheme": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "issuer": {
+                "type": "string"
+              },
+              "jurisdiction": {
+                "type": "string"
+              },
+              "canonical": {
+                "type": "boolean"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 1.0
+              },
+              "valid_from": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "valid_to": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "url": {
+                "type": "string"
+              },
+              "notes": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "scheme",
+              "value"
+            ]
+          }
+        },
+        "contact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "location_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "misc": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "message": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "author_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recipient_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "conversation_id": {
+          "type": "string"
+        },
+        "parent_message_id": {
+          "type": "string"
+        },
+        "quoted_message_id": {
+          "type": "string"
+        },
+        "attachment_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capture_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        },
+        "user_id": {
+          "type": "string"
+        },
+        "is_reply": {
+          "type": "boolean"
+        },
+        "media": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message_id": {
+          "type": "string"
+        },
+        "reply_to": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "thread_id": {
+          "type": "string"
+        },
+        "mentions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reactions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "posted_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "edited_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "deleted": {
+          "type": "boolean"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "breach": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "affected_org_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "affected_product_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "record_count_estimate": {
+          "type": "integer"
+        },
+        "record_count_basis": {
+          "type": "string",
+          "enum": [
+            "operator-reported",
+            "sample-extrapolated",
+            "exact",
+            "unknown"
+          ]
+        },
+        "data_class_records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "disclosure_source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notification_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity_score": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "incident_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "breached_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "discovered_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_classes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organization_id": {
+          "type": "string"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "leak_type": {
+          "type": "string",
+          "enum": [
+            "data-breach",
+            "data-leak",
+            "accidental-exposure",
+            "ransomware-exfiltration",
+            "insider-leak",
+            "combo-list",
+            "scraping-aggregation",
+            "unknown"
+          ]
+        },
+        "incident_date_start": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "incident_date_end": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "discovery_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "disclosed_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "published_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "credentials",
+              "email-addresses",
+              "password-hash",
+              "password-plaintext",
+              "pii",
+              "financial",
+              "payment-card",
+              "health",
+              "source-code",
+              "internal-documents",
+              "database-dumps",
+              "session-tokens",
+              "api-keys",
+              "private-keys",
+              "geolocation",
+              "authentication-cookies",
+              "other"
+            ]
+          }
+        },
+        "records_affected": {
+          "type": "integer"
+        },
+        "sample_size": {
+          "type": "integer"
+        },
+        "credential_count": {
+          "type": "integer"
+        },
+        "unique_email_count": {
+          "type": "integer"
+        },
+        "plaintext_password_count": {
+          "type": "integer"
+        },
+        "hash_algorithms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "leaked_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "leak_corpus_uri": {
+          "type": "string"
+        },
+        "leak_corpus_sha256": {
+          "type": "string"
+        },
+        "distribution_observations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "platform": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "actor_handle": {
+                "type": "string"
+              },
+              "first_seen": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "last_seen": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "affected_domain_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "affected_person_count": {
+          "type": "integer"
+        },
+        "initial_access_vector": {
+          "type": "string"
+        },
+        "root_cause": {
+          "type": "string"
+        },
+        "cve_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "threat_actor_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "malware_families": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "corroboration": {
+          "type": "string",
+          "enum": [
+            "single-source-unverified",
+            "multi-source",
+            "officially-confirmed",
+            "disputed",
+            "unknown"
+          ]
+        },
+        "hibp_breach_name": {
+          "type": "string"
+        },
+        "regulator_filing_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ]
+    },
+    "media": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_file_id": {
+          "type": "string"
+        },
+        "derivative_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "creator_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capture_action_id": {
+          "type": "string"
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        },
+        "codec": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "ocr_text": {
+          "type": "string"
+        },
+        "transcript_file_id": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "title": {
+          "type": "string"
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "creator_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "publisher_id": {
+          "type": "string"
+        },
+        "published_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_seconds": {
+          "type": "number"
+        },
+        "transcript": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "file": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "storage_id": {
+          "type": "string"
+        },
+        "original_name": {
+          "type": "string"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "magic_type": {
+          "type": "string"
+        },
+        "hashes": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "parent_file_id": {
+          "type": "string"
+        },
+        "container_file_id": {
+          "type": "string"
+        },
+        "derived_file_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capture_action_id": {
+          "type": "string"
+        },
+        "extracted_metadata": {},
+        "quarantined": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        },
+        "media_type": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "type": "integer"
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "hash_algorithm": {
+          "type": "string"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "modified_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "owner_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "actor-manifest": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "actor_id": {
+          "type": "string"
+        },
+        "actor_type": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        },
+        "entrypoint": {
+          "type": "string"
+        },
+        "input_dtypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "output_dtypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "routing_keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "configuration_schema": {},
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "healthcheck": {},
+        "schema_revision": {
+          "type": "string"
+        },
+        "manifest_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "actor": {
+          "type": "string"
+        },
+        "consumer_path": {
+          "type": "string"
+        },
+        "target_options": {
+          "type": "array",
+          "items": {}
+        },
+        "document_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "counts_by_dtype": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "record_count": {
+          "type": "integer"
+        },
+        "hash_algorithm": {
+          "type": "string"
+        },
+        "content_hash": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "schema_versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "generated_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "http-transaction": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "transaction_id": {
+          "type": "string"
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "connection_id": {
+          "type": "string"
+        },
+        "parent_transaction_id": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "scheme": {
+          "type": "string"
+        },
+        "host": {
+          "type": "string"
+        },
+        "port": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "http_version": {
+          "type": "string"
+        },
+        "request_headers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "request_body_size": {
+          "type": "integer"
+        },
+        "request_body_hash": {
+          "type": "string"
+        },
+        "request_body_artifact_uri": {
+          "type": "string"
+        },
+        "response_status": {
+          "type": "integer"
+        },
+        "response_reason": {
+          "type": "string"
+        },
+        "response_headers": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "response_body_size": {
+          "type": "integer"
+        },
+        "response_body_hash": {
+          "type": "string"
+        },
+        "response_body_artifact_uri": {
+          "type": "string"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_ms": {
+          "type": "number"
+        },
+        "remote_ip": {
+          "type": "string"
+        },
+        "remote_port": {
+          "type": "integer"
+        },
+        "tls_version": {
+          "type": "string"
+        },
+        "tls_cipher": {
+          "type": "string"
+        },
+        "tls_server_name": {
+          "type": "string"
+        },
+        "certificate_sha256": {
+          "type": "string"
+        },
+        "redirect_from_id": {
+          "type": "string"
+        },
+        "redirect_to_id": {
+          "type": "string"
+        },
+        "capture_actor_uri": {
+          "type": "string"
+        },
+        "challenge_status": {
+          "type": "string"
+        },
+        "captcha_detection_id": {
+          "type": "string"
+        },
+        "captcha_capability": {
+          "type": "string"
+        },
+        "browser_session_ref": {
+          "type": "string"
+        },
+        "network_context_ref": {
+          "type": "string"
+        },
+        "proxy_actor_uri": {
+          "type": "string"
+        },
+        "redacted_headers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "body_capture_policy": {
+          "type": "string"
+        },
+        "request_truncated": {
+          "type": "boolean"
+        },
+        "response_truncated": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "transaction_id",
+        "method",
+        "url",
+        "response_status"
+      ]
+    },
+    "web-capture": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capture_id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "final_url": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status_code": {
+          "type": "integer"
+        },
+        "browser": {
+          "type": "string"
+        },
+        "browser_version": {
+          "type": "string"
+        },
+        "viewport_width": {
+          "type": "integer"
+        },
+        "viewport_height": {
+          "type": "integer"
+        },
+        "device_scale_factor": {
+          "type": "number"
+        },
+        "screenshot_uri": {
+          "type": "string"
+        },
+        "screenshot_hash": {
+          "type": "string"
+        },
+        "screenshot_media_type": {
+          "type": "string"
+        },
+        "screenshot_size_bytes": {
+          "type": "integer"
+        },
+        "dom_artifact_uri": {
+          "type": "string"
+        },
+        "dom_artifact_hash": {
+          "type": "string"
+        },
+        "dom_artifact_size_bytes": {
+          "type": "integer"
+        },
+        "captured_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "http_transaction_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capture_actor_uri": {
+          "type": "string"
+        },
+        "challenge_status": {
+          "type": "string"
+        },
+        "captcha_detection_id": {
+          "type": "string"
+        },
+        "captcha_capability": {
+          "type": "string"
+        },
+        "browser_session_ref": {
+          "type": "string"
+        },
+        "network_context_ref": {
+          "type": "string"
+        },
+        "proxy_actor_uri": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "capture_id",
+        "url",
+        "screenshot_uri",
+        "screenshot_hash"
+      ]
+    },
+    "network-device": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "device_class": {
+          "type": "string",
+          "enum": [
+            "other",
+            "unknown",
+            "general-purpose",
+            "router",
+            "broadband-router",
+            "switch",
+            "wap",
+            "bridge",
+            "firewall",
+            "load-balancer",
+            "proxy-server",
+            "print-server",
+            "terminal-server",
+            "terminal",
+            "phone",
+            "voip-phone",
+            "voip-adapter",
+            "pbx",
+            "webcam",
+            "printer",
+            "media-device",
+            "game-console",
+            "pda",
+            "storage",
+            "storage-misc",
+            "power-device",
+            "remote-management",
+            "security-misc",
+            "specialized",
+            "telecom-misc",
+            "iot"
+          ]
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "serial_number": {
+          "type": "string"
+        },
+        "hardware_class": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "chassis",
+            "backplane",
+            "container",
+            "power-supply",
+            "fan",
+            "sensor",
+            "module",
+            "port",
+            "stack",
+            "cpu",
+            "energy-object",
+            "battery",
+            "storage-drive",
+            "other"
+          ]
+        },
+        "firmware_version": {
+          "type": "string"
+        },
+        "cpe": {
+          "type": "string"
+        },
+        "management_addr_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "site_id": {
+          "type": "string"
+        },
+        "parent_device_id": {
+          "type": "string"
+        },
+        "hosted_host_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "discovered_by_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "device_class"
+      ]
+    },
+    "pcap-capture": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capture_id": {
+          "type": "string"
+        },
+        "file_uri": {
+          "type": "string"
+        },
+        "file_sha256": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "pcap",
+            "pcapng",
+            "unknown"
+          ]
+        },
+        "file_size_bytes": {
+          "type": "integer"
+        },
+        "packet_count": {
+          "type": "integer"
+        },
+        "capture_start": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "capture_end": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_seconds": {
+          "type": "number"
+        },
+        "interfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "iftype": {
+                "type": "integer"
+              },
+              "mac": {
+                "type": "string"
+              },
+              "snaplen": {
+                "type": "integer"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "protocol_hierarchy": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "protocol": {
+                "type": "string"
+              },
+              "frames": {
+                "type": "integer"
+              },
+              "bytes": {
+                "type": "integer"
+              },
+              "pct_frames": {
+                "type": "number"
+              },
+              "pct_bytes": {
+                "type": "number"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "analysis_actor_uri": {
+          "type": "string"
+        },
+        "sensor_ref": {
+          "type": "string"
+        },
+        "capture_software": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "capture_id",
+        "file_uri",
+        "file_sha256"
+      ]
+    },
+    "network-conversation": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "conversation_id": {
+          "type": "string"
+        },
+        "capture_id": {
+          "type": "string"
+        },
+        "layer": {
+          "type": "string",
+          "enum": [
+            "eth",
+            "ip",
+            "ipv6",
+            "tcp",
+            "udp"
+          ]
+        },
+        "a_endpoint": {
+          "type": "object",
+          "properties": {
+            "host_id": {
+              "type": "string"
+            },
+            "mac": {
+              "type": "string"
+            },
+            "ipv4": {
+              "type": "string"
+            },
+            "ipv6": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "b_endpoint": {
+          "type": "object",
+          "properties": {
+            "host_id": {
+              "type": "string"
+            },
+            "mac": {
+              "type": "string"
+            },
+            "ipv4": {
+              "type": "string"
+            },
+            "ipv6": {
+              "type": "string"
+            },
+            "port": {
+              "type": "integer"
+            }
+          },
+          "additionalProperties": false
+        },
+        "protocols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "a_packets": {
+          "type": "integer"
+        },
+        "b_packets": {
+          "type": "integer"
+        },
+        "a_bytes": {
+          "type": "integer"
+        },
+        "b_bytes": {
+          "type": "integer"
+        },
+        "first_frame_num": {
+          "type": "integer"
+        },
+        "last_frame_num": {
+          "type": "integer"
+        },
+        "started_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "ended_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duration_seconds": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "conversation_id",
+        "capture_id",
+        "layer"
+      ]
+    },
+    "wireless-network": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "bssid": {
+          "type": "string"
+        },
+        "security": {
+          "type": "string",
+          "enum": [
+            "open",
+            "wep",
+            "wpa-psk",
+            "wpa2-psk",
+            "wpa2-enterprise",
+            "wpa3-psk",
+            "wpa3-enterprise",
+            "wpa2wpa3-psk",
+            "unknown"
+          ]
+        },
+        "ssid": {
+          "type": "string"
+        },
+        "cipher_suite": {
+          "type": "string"
+        },
+        "auth_mode": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "integer"
+        },
+        "frequency_mhz": {
+          "type": "integer"
+        },
+        "band": {
+          "type": "string",
+          "enum": [
+            "2.4ghz",
+            "5ghz",
+            "6ghz",
+            "unknown"
+          ]
+        },
+        "signal_dbm": {
+          "type": "integer"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "location_accuracy_m": {
+          "type": "number"
+        },
+        "observations": {
+          "type": "integer"
+        },
+        "client_count": {
+          "type": "integer"
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_network_id": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "hosted_host_id": {
+          "type": "string"
+        },
+        "qos": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "bssid",
+        "security"
+      ]
+    },
+    "wireless-station": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mac": {
+          "type": "string"
+        },
+        "station_type": {
+          "type": "string",
+          "enum": [
+            "station",
+            "ap",
+            "bridge",
+            "bridge-ap",
+            "unknown"
+          ]
+        },
+        "vendor": {
+          "type": "string"
+        },
+        "probe_ssids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "last_bssid": {
+          "type": "string"
+        },
+        "signal_dbm": {
+          "type": "integer"
+        },
+        "observations": {
+          "type": "integer"
+        },
+        "first_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "last_seen": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_device_id": {
+          "type": "string"
+        },
+        "packets": {
+          "type": "integer"
+        },
+        "data_bytes": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "mac"
+      ]
+    }
+  }
+}

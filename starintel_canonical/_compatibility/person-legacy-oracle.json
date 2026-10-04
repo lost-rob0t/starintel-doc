@@ -1,0 +1,380 @@
+{
+  "repository": "lost-rob0t/starintel-gpt-auto-dig",
+  "commit": "cb258634bf413b9f3620c229dfd821270e8d5377",
+  "sourcePath": "starintel_doc/spec.py",
+  "sourceSha256": "5d51f48bec710e3785d2d7d8ef1313e887371f1bbe69232e6f13a77a221ac2c9",
+  "personData": {
+    "type": "object",
+    "properties": {
+      "description": {
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "valid_from": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "valid_to": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "canonical_name": {
+        "type": "string"
+      },
+      "name_parts": {},
+      "birth_date_precision": {
+        "type": "string"
+      },
+      "birth_location_id": {
+        "type": "string"
+      },
+      "residence_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "employment_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "membership_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "public_office_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "ownership_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "campaign_finance_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "legal_case_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "biography_source_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "same_as_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "etype": {
+        "type": "string"
+      },
+      "eid": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "display_name": {
+        "type": "string"
+      },
+      "legal_name": {
+        "type": "string"
+      },
+      "short_name": {
+        "type": "string"
+      },
+      "former_names": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "bio": {
+        "type": "string"
+      },
+      "jurisdiction": {
+        "type": "string"
+      },
+      "country": {
+        "type": "string"
+      },
+      "founded_at": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "dissolved_at": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "website": {
+        "type": "string"
+      },
+      "image_url": {
+        "type": "string"
+      },
+      "logo_url": {
+        "type": "string"
+      },
+      "external_ids": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "scheme": {
+              "type": "string"
+            },
+            "value": {
+              "type": "string"
+            },
+            "issuer": {
+              "type": "string"
+            },
+            "jurisdiction": {
+              "type": "string"
+            },
+            "canonical": {
+              "type": "boolean"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 1.0
+            },
+            "valid_from": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "valid_to": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "url": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "scheme",
+            "value"
+          ]
+        }
+      },
+      "contact_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "location_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "fname": {
+        "type": "string"
+      },
+      "mname": {
+        "type": "string"
+      },
+      "lname": {
+        "type": "string"
+      },
+      "suffix": {
+        "type": "string"
+      },
+      "full_name": {
+        "type": "string"
+      },
+      "preferred_name": {
+        "type": "string"
+      },
+      "gender": {
+        "type": "string"
+      },
+      "pronouns": {
+        "type": "string"
+      },
+      "dob": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "birthplace": {
+        "type": "string"
+      },
+      "death_date": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "nationalities": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "citizenships": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "occupations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "employers": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "positions": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "education_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "social_account_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "email_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "phone_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "family_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "associate_ids": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "political_affiliations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "professional_affiliations": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "public_roles": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "misc": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

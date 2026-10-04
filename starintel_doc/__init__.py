@@ -1,27 +1,30 @@
 #!/usr/bin/env python3
 
-from starintel_doc.v090 import (
+from starintel_doc.canonical import (
     ADAPTER_VERSION,
     SPEC_VERSION,
     Document,
+    RawJsonNumber,
     UnsupportedVersion,
     ValidationError,
     capabilities,
     load_schema,
+    parse_json,
+    stringify_json,
     roundtrip_document,
     schema_inventory,
     validate_document,
 )
-from starintel_doc.network_capture import (
+from starintel_doc.canonical_capture import (
     NETWORK_CAPTURE_DTYPES,
-    PROFILE_VERSION,
-    RELEASE_VERSION,
     build_http_transaction,
     build_web_capture,
-    profile_schema,
     redact_headers,
     to_jsonld as network_capture_to_jsonld,
 )
+
+# Explicit historical profile API. New capture producers use the canonical schema.
+from starintel_doc.network_capture import profile_schema as legacy_profile_schema
 
 # Legacy flat 0.8 modules remain importable for explicit migration work.
 from starintel_doc import documents as legacy_documents
@@ -35,10 +38,14 @@ from starintel_doc import social_media as legacy_social_media
 from starintel_doc import targets as legacy_targets
 from starintel_doc import web as legacy_web
 
+RELEASE_VERSION = SPEC_VERSION
+PROFILE_VERSION = SPEC_VERSION
+
 __all__ = [
     "ADAPTER_VERSION",
     "SPEC_VERSION",
     "Document",
+    "RawJsonNumber",
     "NETWORK_CAPTURE_DTYPES",
     "PROFILE_VERSION",
     "RELEASE_VERSION",
@@ -48,8 +55,10 @@ __all__ = [
     "build_web_capture",
     "capabilities",
     "load_schema",
+    "parse_json",
+    "stringify_json",
     "network_capture_to_jsonld",
-    "profile_schema",
+    "legacy_profile_schema",
     "redact_headers",
     "roundtrip_document",
     "schema_inventory",
