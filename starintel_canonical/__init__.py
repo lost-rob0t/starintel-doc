@@ -149,6 +149,7 @@ def validate_json_value(value: Any, path: str = "$", ancestors: set[int] | None 
 def parse_json(value: str | bytes | bytearray) -> Any:
     """Decode JSON exactly: integers become int; other tokens use Decimal/raw values.
 
+    Duplicate decoded keys are rejected within each object, even for equal values.
     Use this at the initial wire boundary. Precision cannot be recovered from
     values already decoded by a binary-floating-point JSON parser. Schema
     decimal fields remain strings; Decimal represents ordinary JSON numbers.
@@ -156,10 +157,19 @@ def parse_json(value: str | bytes | bytearray) -> Any:
     def reject_constant(token: str) -> Any:
         raise ValidationError("invalid_number", f"JSON numbers must be finite: {token}")
 
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result = {}
+        for key, item in pairs:
+            if key in result:
+                raise ValidationError("duplicate_key", f"Duplicate JSON key: {key!r}")
+            result[key] = item
+        return result
+
     # Decimal-to-int avoids CPython's configurable digit limit without changing
     # process-global security settings. The JSON decoder validates the grammar.
     return json.loads(value, parse_int=lambda token: int(Decimal(token)),
-                      parse_float=parse_fraction, parse_constant=reject_constant)
+                      parse_float=parse_fraction, parse_constant=reject_constant,
+                      object_pairs_hook=unique_object)
 
 
 def stringify_json(value: Any, *, pretty: bool = False, sort_keys: bool = False) -> str:

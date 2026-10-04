@@ -41,6 +41,7 @@ def valid_rfc3339_datetime(value: object) -> bool:
 
 
 from starintel_canonical.errors import ValidationError, UnsupportedVersion
+from starintel_doc._legacy_json import unique_object
 
 
 def schema_path() -> Path:
@@ -138,7 +139,7 @@ class Document:
 
     @classmethod
     def from_json(cls, value: str, schema: dict[str, Any] | None = None) -> "Document":
-        parsed = json.loads(value)
+        parsed = json.loads(value, object_pairs_hook=unique_object)
         if not isinstance(parsed, dict):
             raise ValidationError("wrong_type", "$: expected object")
         return cls.from_dict(parsed, schema)

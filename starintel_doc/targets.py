@@ -2,7 +2,8 @@
 
 from dataclasses import dataclass, field
 from starintel_doc.documents import Document
-from dataclasses_json import dataclass_json, LetterCase
+from dataclasses_json import LetterCase
+from starintel_doc._legacy_json import dataclass_json
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
