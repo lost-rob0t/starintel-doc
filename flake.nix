@@ -54,7 +54,7 @@
         meta = with pkgs.lib; {
           description = "Document Spec for Star intel";
           homepage = "https://github.com/lost-rob0t/starintel_doc";
-          license = licenses.mit;
+          license = licenses.agpl3Only;
         };
       };
 

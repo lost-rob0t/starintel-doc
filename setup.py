@@ -6,6 +6,7 @@ setup(
     description="StarLang-generated StarIntel 0.10.1 runtime with explicit historical compatibility",
     long_description_content_type="text/markdown",
     url="https://github.com/lost-rob0t/starintel-doc",
+    license="AGPL-3.0-only",
     packages=find_packages(),
     package_data={"starintel_canonical": ["py.typed", "_release/*", "_release/generated/*", "_compatibility/*.json"], "starintel_doc": ["_legacy/*"]},
     install_requires=[
@@ -19,7 +20,7 @@ setup(
         ]
     },
     classifiers=[
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: GNU Affero General Public License v3",
         "Intended Audience :: Developers",
         "Natural Language :: English",
         "Programming Language :: Python :: 3 :: Only",
