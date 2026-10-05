@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
-from dataclasses_json import dataclass_json, LetterCase, config
+from dataclasses_json import LetterCase, config
+from starintel_doc._legacy_json import dataclass_json
 from dataclasses import dataclass, field, asdict
 from hashlib import md5
 import time

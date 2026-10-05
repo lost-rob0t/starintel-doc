@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from dataclasses import dataclass, field
-from dataclasses_json import dataclass_json, LetterCase
+from dataclasses_json import LetterCase
+from starintel_doc._legacy_json import dataclass_json
 from starintel_doc.documents import Document
 
 

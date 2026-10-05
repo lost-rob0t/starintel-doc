@@ -105,3 +105,12 @@ This helper is not proof of complete semantic migration for shared-name legacy
 types: incompatible private payload fields (such as person external-ID arrays)
 need source-backed mappings and may reject until those mappings are established.
 Consumers must preserve the explicit legacy boundary while that work remains.
+
+## Raw JSON object keys
+
+Raw JSON parsers reject duplicate decoded object keys, including equal values
+and escaped spellings, before a mapping can overwrite them. Each object has its
+own key scope. Unicode normalization is not applied to distinct key strings.
+The shared raw-text regression corpus is vendored in tests/fixtures/raw-json-unique-keys.json;
+it must match the StarLang specs/starintel/wire authority copy. Already-parsed
+objects cannot recover duplicates discarded by an upstream decoder.
